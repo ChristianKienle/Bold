@@ -1,0 +1,12 @@
+- Implement SQLITE_BUSY: Muss man eig. nicht speziell behandeln. Ich würde es aber gerne als fatal error abfangen.
+- Add documentation
+- Implement Printable
+- Implement DebugPrintable
+- NSDate support
+- Subscripting
+- Make enumeration support close the result set automatically
+
+Done:
+- Support for Bool
+- Support for NSData
+- enumeration support
