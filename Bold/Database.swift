@@ -10,7 +10,7 @@ import Foundation
 */
 public class Database {
   private var URL:String
-  private var databaseHandle = COpaquePointer.null()
+  var databaseHandle = COpaquePointer.null()
   
   /**
     Creates a Database instance.
