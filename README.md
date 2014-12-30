@@ -1,6 +1,6 @@
 ![Alt text](/GFX/logo.png?raw=true "Bold Logo")
 
-A lightweight and extensible SQLite wrapper written in Swift.  
+A lightweight and extensible SQLite wrapper written in Swift by [@CocoaPimper](https://twitter.com/CocoaPimper). 
 
 
 # Why yet another SQLite wrapper?
