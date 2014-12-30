@@ -3,10 +3,10 @@
 - Implement Printable
 - Implement DebugPrintable
 - NSDate support
-- Subscripting
-- Make enumeration support close the result set automatically
 
 Done:
+- Subscripting: makes no sense to implement
 - Support for Bool
 - Support for NSData
 - enumeration support
+- Make enumeration support close the result set automatically

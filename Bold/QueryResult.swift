@@ -9,7 +9,7 @@ import Foundation
     // work with the row
   }
 
-  In the above example row is an instance of Row. If the query result is .Failure the above code is still valid but the code block of the for-in-loop is simply not executed.
+  In the above example row is an instance of Row. If the query result is .Failure the above code is still valid but the code block of the for-in-loop is simply not executed. If the above for-loop iterates over every row in the query result it is closed automatically for you after the last iteration. If you are not using for-in to iterate over the complete result set then you have to close it manually.
 
   You can use isSuccess and isFailure to find out whether the query contains a result or an error.
 */
@@ -106,6 +106,8 @@ public struct QueryResultGenerator : GeneratorType {
     if let resultSet = queryResult.resultSet {
       let hadNext = resultSet.next()
       if !hadNext {
+        // Close
+        resultSet.close()
         return nil
       }
       return resultSet.row
