@@ -65,5 +65,6 @@ When you access the contents of a row you access the data by using methods like 
 Now you can use `UUIDValue(columnName:)` when accessing the data of your rows.
 
 # Lightweight
-**Bold** is lightweight.
+**Bold** is lightweight. This means that **Bold** does not try to be smart. For example it does not implement `SQLITE_BUSY`-handling like some other SQLite wrappers do. I believe that any implementation of `SQLITE_BUSY`-handling hides an underlying locking problem that you might have. Other wrappers simply wait for a couple of seconds until they time out. Please note that libsqlite3 already has ways to avoid `SQLITE_BUSY` related errors.
 
+**Bold** also exposes the raw `sqlite3` database handle and the raw `sqlite3_stmt` handle. You should try to avoid accessing those but if you need to access them they are there.
