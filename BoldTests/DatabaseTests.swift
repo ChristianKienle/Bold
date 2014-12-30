@@ -36,25 +36,25 @@ class DatabaseTests : XCTestCase {
     let result = db.executeQuery("SELECT firstName, lastName FROM Person")
     XCTAssertTrue(result.isSuccess)
     var consumed = false
-    result.consume { row -> Void in
+    for row in result {
       // Is anything there?
       XCTAssertNotNil(row.stringValue("firstName"))
       XCTAssertNotNil(row.stringValue("lastName"))
-
+      
       // Is it correct?
       XCTAssertEqual(row.stringValue("firstName")!, "Christian")
       XCTAssertEqual(row.stringValue("lastName")!, "Kienle")
-
+      
       // Are other column values nil?
       XCTAssertNil(row.stringValue("firstname"))
       XCTAssertNil(row.stringValue("lastname"))
-
+      
       XCTAssertNil(row.stringValue("FIRSTNAME"))
       XCTAssertNil(row.stringValue("LASTNAME"))
-
+      
       XCTAssertNil(row.stringValue("doesnotexist"))
       XCTAssertNil(row.stringValue("hahaha"))
-
+      
       consumed = true
     }
     XCTAssertTrue(consumed)
@@ -74,7 +74,7 @@ class DatabaseTests : XCTestCase {
     XCTAssertTrue(result.isSuccess)
     var consumed = false
     var rowCount = 0
-    result.consume { row -> Void in
+    for row in result {
       // Is anything there?
       XCTAssertNotNil(row.stringValue("id"))
       XCTAssertNotNil(row.stringValue("name"))
@@ -83,20 +83,20 @@ class DatabaseTests : XCTestCase {
       XCTAssertNil(row.stringValue("info"))
       XCTAssertNotNil(row.dataValue("picture"))
       XCTAssertNotNil(row.boolValue("isCool"))
-
+      
       // Is it correct?
       XCTAssertEqual(row.stringValue("id")!, "1")
       XCTAssertEqual(row.stringValue("name")!, "Christian")
       XCTAssertEqual(row.intValue("age")!, 20)
       if let gender = row.doubleValue("gender") {
         XCTAssertEqualWithAccuracy(gender, 0.75, 0.01)
-
+        
       } else {
         XCTFail("gender cannot be nil")
       }
       XCTAssertEqual(row.dataValue("picture")!, picture)
       XCTAssertEqual(row.boolValue("isCool")!, true)
-
+      
       consumed = true
       rowCount++
     }
@@ -114,7 +114,7 @@ class DatabaseTests : XCTestCase {
     XCTAssertTrue(result.isSuccess)
     var consumed = false
     var rowCount = 0
-    result.consume { row -> Void in
+    for row in result {
       // Is anything there?
       XCTAssertNotNil(row.stringValue("firstName"))
       XCTAssertNotNil(row.stringValue("lastName"))
@@ -138,7 +138,7 @@ class DatabaseTests : XCTestCase {
     XCTAssertTrue(result.isSuccess)
     var consumed = false
     var rowCount = 0
-    result.consume { row -> Void in
+    for row in result {
       // Is anything there?
       XCTAssertNotNil(row.stringValue("firstName"))
       XCTAssertNotNil(row.stringValue("lastName"))
@@ -176,16 +176,16 @@ class DatabaseTests : XCTestCase {
     XCTAssertTrue(result.isSuccess)
     var consumed = false
     var rowCount = 0
-    result.consume { row -> Void in
-      // Is anything there?
-      XCTAssertNotNil(row.stringValue("t.fn"))
-      XCTAssertNotNil(row.stringValue("t.ln"))
-      
-      // Is it correct?
-      XCTAssertEqual(row.stringValue("t.fn")!, "Christian")
-      XCTAssertEqual(row.stringValue("t.ln")!, "Kienle")
-      consumed = true
-      rowCount++
+    for row in result {
+        // Is anything there?
+        XCTAssertNotNil(row.stringValue("t.fn"))
+        XCTAssertNotNil(row.stringValue("t.ln"))
+        
+        // Is it correct?
+        XCTAssertEqual(row.stringValue("t.fn")!, "Christian")
+        XCTAssertEqual(row.stringValue("t.ln")!, "Kienle")
+        consumed = true
+        rowCount++
     }
     XCTAssertTrue(rowCount == 1)
     XCTAssertTrue(consumed)

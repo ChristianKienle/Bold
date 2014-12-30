@@ -68,17 +68,6 @@ public enum QueryResult {
     return false
   }
   
-  // TODO: Remove the following methods.
-  public func consume(consumer:(row:Row) -> Void) {
-    if let resultSet = self.resultSet {
-      while resultSet.next() {
-        let row = resultSet.row
-        consumer(row:row)
-      }
-    }
-    closeResultSet()
-  }
-  
   public func consumeResultSet(consumer: (resultSet:ResultSet) -> Void) {
     if let resultSet = self.resultSet {
       consumer(resultSet: resultSet)

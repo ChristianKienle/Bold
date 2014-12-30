@@ -27,7 +27,7 @@ class BoldTests: XCTestCase {
     XCTAssertTrue(result.isSuccess)
     let queryResult = database.executeQuery("SELECT * FROM PERSON")
     XCTAssertTrue(queryResult.isSuccess)
-    queryResult.consume { (row) -> Void in
+    for row in queryResult {
       let firstName = row.stringValue("firstName")
       let lastName = row.stringValue("lastName")
       let age = row.intValue("age")
@@ -52,14 +52,13 @@ class BoldTests: XCTestCase {
     }
     let result = self.database.executeQuery("SELECT firstName, lastName, age FROM PERSON", arguments: [])
     var count = 0
-    result.consume { row in
+    for row in result {
       count++
       let firstName = row.stringValue("firstName")
       NSLog("fn: %@", firstName!)
       return ()
     }
     XCTAssertTrue(count==3)
-    
   }
   
   func testInsertWithArgumentArray() {
