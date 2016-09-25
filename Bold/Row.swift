@@ -27,8 +27,8 @@ extension Row {
    :param: columnName The name of the column you want to get the value of.
    :returns: The string stored in the specified column.
    */
-  public func stringValue(_ columnName:String) -> String? {
-    return value(columnName)
+  public func stringValue(forColumn columnName:String) -> String? {
+    return value(forColumn: columnName)
   }
   
   /**
@@ -36,8 +36,8 @@ extension Row {
    :param: columnName The name of the column you want to get the value of.
    :returns: The integer stored in the specified column.
    */
-  public func intValue(_ columnName:String) -> Int? {
-    return value(columnName)
+  public func intValue(forColumn columnName:String) -> Int? {
+    return value(forColumn: columnName)
   }
   
   /**
@@ -45,8 +45,8 @@ extension Row {
    :param: columnName The name of the column you want to get the value of.
    :returns: The double value stored in the specified column.
    */
-  public func doubleValue(_ columnName:String) -> Double? {
-    return value(columnName)
+  public func doubleValue(forColumn columnName:String) -> Double? {
+    return value(forColumn: columnName)
   }
   
   /**
@@ -54,11 +54,11 @@ extension Row {
    :param: columnName The name of the column you want to get the value of.
    :returns: The data stored in the specified column.
    */
-  public func dataValue(_ columnName:String) -> Data? {
-    return value(columnName)
+  public func dataValue(forColumn columnName:String) -> Data? {
+    return value(forColumn: columnName)
   }
   
-  fileprivate func value<T>(_ columnName:String) -> T? {
+  fileprivate func value<T>(forColumn columnName:String) -> T? {
     return self.valuesByColumnNames[columnName] as? T
   }
 }
@@ -70,8 +70,8 @@ extension Row {
    :param: columnName The name of the column you want to get the value of.
    :returns: The boolean value stored in the specified column.
    */
-  public func boolValue(_ columnName:String) -> Bool? {
-    guard let intValue = intValue(columnName) else {
+  public func boolValue(forColumn columnName:String) -> Bool? {
+    guard let intValue = intValue(forColumn: columnName) else {
       return nil
     }
     switch intValue {

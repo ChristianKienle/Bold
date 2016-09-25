@@ -23,14 +23,14 @@ class BoldTests: XCTestCase {
   
   func testNullValues() {
     createPersonTable()
-    let result = database.executeUpdate("INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil])
+    let result = database.executeUpdate(query: "INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil])
     XCTAssertTrue(result.isSuccess)
-    let queryResult = database.executeQuery("SELECT * FROM PERSON")
+    let queryResult = database.executeQuery(query: "SELECT * FROM PERSON")
     XCTAssertTrue(queryResult.isSuccess)
     for row in queryResult {
-      let firstName = row.stringValue("firstName")
-      let lastName = row.stringValue("lastName")
-      let age = row.intValue("age")
+      let firstName = row.stringValue(forColumn: "firstName")
+      let lastName = row.stringValue(forColumn: "lastName")
+      let age = row.intValue(forColumn: "age")
       XCTAssertNotNil(firstName)
       XCTAssertNil(lastName)
       XCTAssertNil(age)
@@ -38,7 +38,7 @@ class BoldTests: XCTestCase {
   }
   
   func testMalformedQuery() {
-    let result = self.database.executeQuery("CREATE TABL PERSON (firstName, lastName, age)")
+    let result = self.database.executeQuery(query: "CREATE TABL PERSON (firstName, lastName, age)")
     XCTAssertTrue(result.isSuccess == false)
   }
   
@@ -50,11 +50,11 @@ class BoldTests: XCTestCase {
     for person in persons {
       insertPerson(person)
     }
-    let result = self.database.executeQuery("SELECT firstName, lastName, age FROM PERSON", arguments: [])
+    let result = self.database.executeQuery(query: "SELECT firstName, lastName, age FROM PERSON", arguments: [:])
     var count = 0
     for row in result {
       count += 1
-      let firstName = row.stringValue("firstName")
+      let firstName = row.stringValue(forColumn: "firstName")
       NSLog("fn: %@", firstName!)
       return ()
     }
@@ -66,7 +66,7 @@ class BoldTests: XCTestCase {
     let arguments:Array<Bindable?> = ["Christian", "Kienle", 1]
     
     // Insert Person
-    let result = self.database.executeUpdate("INSERT INTO PERSON (firstName, lastName, age) VALUES (?, ?, ?)", arguments: arguments)
+    let result = self.database.executeUpdate(query: "INSERT INTO PERSON (firstName, lastName, age) VALUES (?, ?, ?)", arguments: arguments)
     XCTAssertTrue(result.isSuccess)
   }
   
@@ -74,22 +74,22 @@ class BoldTests: XCTestCase {
     self.createPersonTable()
     
     // Insert Person
-    let result = self.database.executeUpdate("INSERT INTO PERSON (firstName, lastName) VALUES (:firstName, :lastName)", arguments: ["firstName" : "Christian", "lastName" : "Kienle"])
+    let result = self.database.executeUpdate(query: "INSERT INTO PERSON (firstName, lastName) VALUES (:firstName, :lastName)", arguments: ["firstName" : "Christian", "lastName" : "Kienle"])
     XCTAssertTrue(result.isSuccess)
   }
   
   func testCreateTable() {
-    var result = self.database.executeUpdate("CREATE TABLE PERSON (firstName, lastName)", arguments: Array<Bindable?>())
+    var result = self.database.executeUpdate(query: "CREATE TABLE PERSON (firstName, lastName)", arguments: Array<Bindable?>())
     XCTAssertTrue(result.isSuccess)
     
-    result = self.database.executeUpdate("INSERT INTO PERSON (firstName, lastName) VALUES (?, ?)", arguments: ["Christian", "Kienle"])
+    result = self.database.executeUpdate(query: "INSERT INTO PERSON (firstName, lastName) VALUES (?, ?)", arguments: ["Christian", "Kienle"])
     XCTAssertTrue(result.isSuccess)
     
-    let queryResult = self.database.executeQuery("SELECT firstName, lastName FROM PERSON", arguments:Array<Bindable?>())
+    let queryResult = self.database.executeQuery(query: "SELECT firstName, lastName FROM PERSON", arguments:Array<Bindable?>())
     XCTAssertTrue(queryResult.isSuccess)
     queryResult.consumeResultSet { resultSet in
       while resultSet.next() {
-        let name = resultSet.stringValue(0)
+        let name = resultSet.stringValue(forColumn: 0)
         XCTAssertEqual("Christian", name)
       }
     }
@@ -97,7 +97,7 @@ class BoldTests: XCTestCase {
   }
   
   func testExecuteUpdate() {
-    let result = self.database.executeQuery("SELECT * FROM PENIS", arguments: Array<Bindable?>())
+    let result = self.database.executeQuery(query: "SELECT * FROM PENIS", arguments: Array<Bindable?>())
     switch result {
     case .success( _):
       NSLog("success")
@@ -109,12 +109,12 @@ class BoldTests: XCTestCase {
   // Helper
   fileprivate func createPersonTable() {
     let arguments:[Bindable?] = Array<Bindable?>()
-    let result = self.database.executeUpdate("CREATE TABLE PERSON (firstName text, lastName text, age integer)", arguments:arguments )
+    let result = self.database.executeUpdate(query: "CREATE TABLE PERSON (firstName text, lastName text, age integer)", arguments:arguments )
     XCTAssertTrue(result.isSuccess)
   }
   
   fileprivate func insertPerson(_ person:Person) {
-    let result = self.database.executeUpdate("INSERT INTO PERSON (firstName, lastName, age) VALUES (?, ?, ?)", arguments: [person.firstName, person.lastName, person.age])
+    let result = self.database.executeUpdate(query: "INSERT INTO PERSON (firstName, lastName, age) VALUES (?, ?, ?)", arguments: [person.firstName, person.lastName, person.age])
     XCTAssertTrue(result.isSuccess)
   }
 }
