@@ -9,16 +9,16 @@ struct Person {
 }
 
 class BoldTests: XCTestCase {
-  var database:Database!
+  var database: Database!
   override func setUp() {
     super.setUp()
     self.database = Database(URL: ":memory:")
-    self.database?.open()
+    let _ = self.database?.open()
   }
   
   override func tearDown() {
     super.tearDown()
-    self.database?.close()
+    let _ = self.database?.close()
   }
   
   func testNullValues() {
@@ -53,7 +53,7 @@ class BoldTests: XCTestCase {
     let result = self.database.executeQuery("SELECT firstName, lastName, age FROM PERSON", arguments: [])
     var count = 0
     for row in result {
-      count++
+      count += 1
       let firstName = row.stringValue("firstName")
       NSLog("fn: %@", firstName!)
       return ()
@@ -63,7 +63,7 @@ class BoldTests: XCTestCase {
   
   func testInsertWithArgumentArray() {
     self.createPersonTable()
-    var arguments:Array<Bindable?> = ["Christian", "Kienle", 1]
+    let arguments:Array<Bindable?> = ["Christian", "Kienle", 1]
     
     // Insert Person
     let result = self.database.executeUpdate("INSERT INTO PERSON (firstName, lastName, age) VALUES (?, ?, ?)", arguments: arguments)
@@ -85,11 +85,11 @@ class BoldTests: XCTestCase {
     result = self.database.executeUpdate("INSERT INTO PERSON (firstName, lastName) VALUES (?, ?)", arguments: ["Christian", "Kienle"])
     XCTAssertTrue(result.isSuccess)
     
-    var queryResult = self.database.executeQuery("SELECT firstName, lastName FROM PERSON", arguments:Array<Bindable?>())
+    let queryResult = self.database.executeQuery("SELECT firstName, lastName FROM PERSON", arguments:Array<Bindable?>())
     XCTAssertTrue(queryResult.isSuccess)
     queryResult.consumeResultSet { resultSet in
       while resultSet.next() {
-        var name = resultSet.stringValue(0)
+        let name = resultSet.stringValue(0)
         XCTAssertEqual("Christian", name)
       }
     }
@@ -97,23 +97,23 @@ class BoldTests: XCTestCase {
   }
   
   func testExecuteUpdate() {
-    var result = self.database.executeQuery("SELECT * FROM PENIS", arguments: Array<Bindable?>())
+    let result = self.database.executeQuery("SELECT * FROM PENIS", arguments: Array<Bindable?>())
     switch result {
-    case .Success(let resultSet):
+    case .success( _):
       NSLog("success")
-    case .Failure(let error):
+    case .failure( _):
       NSLog("error");
     }
   }
   
   // Helper
-  private func createPersonTable() {
+  fileprivate func createPersonTable() {
     let arguments:[Bindable?] = Array<Bindable?>()
     let result = self.database.executeUpdate("CREATE TABLE PERSON (firstName text, lastName text, age integer)", arguments:arguments )
     XCTAssertTrue(result.isSuccess)
   }
   
-  private func insertPerson(person:Person) {
+  fileprivate func insertPerson(_ person:Person) {
     let result = self.database.executeUpdate("INSERT INTO PERSON (firstName, lastName, age) VALUES (?, ?, ?)", arguments: [person.firstName, person.lastName, person.age])
     XCTAssertTrue(result.isSuccess)
   }

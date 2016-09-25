@@ -8,9 +8,9 @@ import Foundation
   - You query a database by using executeQuery(query:arguments:). Use this method to execute (SELECT) statements that give you an actual result back.
   - For other statement types (INSERT, UPDATE, DELETE, ...) you have to use executeupdate(query:arguments:).
 */
-public class Database {
-  private var URL:String
-  var databaseHandle = COpaquePointer.null()
+final public class Database {
+  fileprivate var URL: String
+  var databaseHandle: OpaquePointer?
   
   /**
     Creates a Database instance.
@@ -19,7 +19,7 @@ public class Database {
   
     :returns: A database instance which can now be opened.
   */
-  public init(URL:String) {
+  public init(URL: String) {
     self.URL = URL
   }
   
@@ -57,19 +57,19 @@ public class Database {
     :param: arguments Instances that conform the the Bindable protocol.
     :returns: An instance of QueryResult and never nil. Inspect the QueryResult to find out about the returned rows or about the error.
   */
-  public func executeQuery(query:String, arguments:[Bindable?]) -> QueryResult {
+  public func executeQuery(_ query:String, arguments:[Bindable?]) -> QueryResult {
     if let statement = prepare(query).statement {
       var argumentIndex:Int32 = 1
       for argument in arguments {
         let status = statement.bind(argumentIndex, value: argument)
         if !status {
-          return .Failure(error(.BindFailed))
+          return .failure(error(.bindFailed))
         }
-        argumentIndex++
+        argumentIndex += 1
       }
-      return .Success(ResultSet(statement: statement))
+      return .success(ResultSet(statement: statement))
     }
-    return .Failure(error(.PrepareFailed))
+    return .failure(error(.prepareFailed))
   }
 
   /**
@@ -88,31 +88,31 @@ public class Database {
   :param: arguments Instances that conform the the Bindable protocol.
   :returns: An instance of QueryResult and never nil. Inspect the QueryResult to find out about the returned rows or about the error.
   */
-  public func executeQuery(query:String, arguments:Dictionary<String, Bindable?>) -> QueryResult {
+  public func executeQuery(_ query:String, arguments:Dictionary<String, Bindable?>) -> QueryResult {
     if let statement = prepare(query).statement {
       for (argumentName, argumentValue) in arguments {
         let parameterName = ":" + argumentName
-        let rawName = parameterName.cStringUsingEncoding(NSUTF8StringEncoding)
+        let rawName = parameterName.cString(using: String.Encoding.utf8)
         let index = sqlite3_bind_parameter_index(statement.statementHandle, rawName!)
         if index == 0 {
           NSLog("Failed to bind parameter named '%@'.", argumentName)
-          return .Failure(error(.BindFailed))
+          return .failure(error(.bindFailed))
         }
         
         let bound = statement.bind(index, value: argumentValue)
         if !bound {
-          return .Failure(error(.BindFailed))
+          return .failure(error(.bindFailed))
         }
       }
-      return .Success(ResultSet(statement: statement))
+      return .success(ResultSet(statement: statement))
     }
-    return .Failure(error(.PrepareFailed))
+    return .failure(error(.prepareFailed))
   }
   
   /**
   Executes a query without any arguments/parameters. This is a convenience method that simply calls executeQuery(query:arguments:) with an empty arguments array. See executeQuery(query:arguments:) for more information.
   */
-  public func executeQuery(query:String) -> QueryResult {
+  public func executeQuery(_ query:String) -> QueryResult {
     return executeQuery(query, arguments:[Bindable?]())
   }
   
@@ -132,17 +132,17 @@ public class Database {
   :param: arguments Instances that conform the the Bindable protocol.
   :returns: An instance of UpdateResult and never nil. Inspect the UpdateResult to find out about the returned rows or about the error.
   */
-  public func executeUpdate(query:String, arguments:[Bindable?]) -> UpdateResult {
+  public func executeUpdate(_ query:String, arguments:[Bindable?]) -> UpdateResult {
     let result = executeQuery(query, arguments:arguments)
-    var updateResult = UpdateResult.Success
+    let updateResult = UpdateResult.success
     if updateResult.isFailure {
-      return .Failure(error(.ExecuteQueryFailed))
+      return .failure(error(.executeQueryFailed))
     }
     var success = false
     result.consumeResultSetAndClose { resultSet in
       success = resultSet.step() == SQLITE_DONE
     }
-    return success ? .Success : .Failure(error(.ExecuteQueryFailed))
+    return success ? .success : .failure(error(.executeQueryFailed))
   }
   
   /**
@@ -161,61 +161,57 @@ public class Database {
   :param: arguments Instances that conform the the Bindable protocol.
   :returns: An instance of UpdateResult and never nil. Inspect the UpdateResult to find out about the returned rows or about the error.
   */
-  public func executeUpdate(query:String, arguments:Dictionary<String, Bindable?>) -> UpdateResult {
+  public func executeUpdate(_ query:String, arguments:Dictionary<String, Bindable?>) -> UpdateResult {
     if let resultSet = executeQuery(query, arguments: arguments).resultSet {
-      return resultSet.step() == SQLITE_DONE ? .Success : .Failure(error(.StepFailed))
+      return resultSet.step() == SQLITE_DONE ? .success : .failure(error(.stepFailed))
     }
-    return .Failure(error(.ExecuteQueryFailed))
+    return .failure(error(.executeQueryFailed))
   }
   
   /**
   Executes an update query without any arguments/parameters. This is a convenience method that simply calls executeUpdate(query:arguments:) with an empty arguments array. See executeUpdate(query:arguments:) for more information.
   */
-  public func executeUpdate(query:String) -> UpdateResult {
+  public func executeUpdate(_ query:String) -> UpdateResult {
     return executeUpdate(query, arguments:[Bindable?]())
   }
   
   // MARK: Prepare
-  private func prepare(statements:String) -> PreparationResult {
-    let sql = statements.cStringUsingEncoding(NSUTF8StringEncoding)
-    var handle: COpaquePointer = nil
+  private func prepare(_ statements:String) -> PreparationResult {
+    let sql = statements.cString(using: String.Encoding.utf8)
+    var handle: OpaquePointer? = nil
     let status = sqlite3_prepare_v2(databaseHandle, sql!, -1, &handle, nil)
     if status == SQLITE_OK {
-      return .Success(statement:Statement(statementHandle:handle, database:self))
+      return .success(statement:Statement(statementHandle:handle!, database:self))
     }
-    return .Failure(error:error(.PrepareFailed))
+    return .failure(error:error(.prepareFailed))
   }
   
   // MARK: Error
-  private var SQLiteErrorCode:Int32 {
+  fileprivate var SQLiteErrorCode:Int32 {
     return sqlite3_errcode(databaseHandle)
   }
   
-  private var errorMessage:String {
-    let rawMessage = sqlite3_errmsg(databaseHandle)
-    if rawMessage == nil {
+  fileprivate var errorMessage:String {
+    guard let rawMessage = sqlite3_errmsg(databaseHandle) else {
       return ""
     }
-    let message = String(UTF8String:rawMessage)
-    if let message = message {
-      return message
-    }
-    return ""
+    
+    return String(cString: rawMessage)
   }
   
-  private func error(code:Error.Code) -> Error {
+  fileprivate func error(_ code:Error.Code) -> Error {
     return Error(code:code, message:errorMessage, SQLiteErrorCode:SQLiteErrorCode)
   }
 }
 
 // MARK: Printable and DebugPrintable
-extension Database : Printable {
+extension Database : CustomStringConvertible {
   public var description: String {
     return "Database at \(URL)"
   }
 }
 
-extension Database : DebugPrintable {
+extension Database : CustomDebugStringConvertible {
   public var debugDescription: String {
     return "\(description) {error message: \(errorMessage), SQLite error code: \(SQLiteErrorCode)}"
   }

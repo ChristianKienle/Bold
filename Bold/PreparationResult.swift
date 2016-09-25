@@ -1,8 +1,8 @@
 import Foundation
 
 internal enum PreparationResult {
-  case Success(statement:Statement)
-  case Failure(error:Error)
+  case success(statement:Statement)
+  case failure(error:Error)
   
   internal var isSuccess:Bool {
     return statement != nil
@@ -14,8 +14,8 @@ internal enum PreparationResult {
   
   internal var statement:Statement? {
     switch self {
-    case .Success(let statement): return statement
-    case .Failure: return nil
+    case .success(let statement): return statement
+    case .failure: return nil
     }
   }
 }

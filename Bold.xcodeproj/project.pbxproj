@@ -10,7 +10,6 @@
 		ABACDE0E1A50683900134C98 /* Bold-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = ABACDE0D1A50683900134C98 /* Bold-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		ABACDE141A50683900134C98 /* Bold.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABACDE081A50683900134C98 /* Bold.framework */; };
 		ABACDE1B1A50683900134C98 /* BoldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACDE1A1A50683900134C98 /* BoldTests.swift */; };
-		ABACDE251A50685B00134C98 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ABACDE241A50685B00134C98 /* libsqlite3.dylib */; };
 		ABACDE2E1A50687300134C98 /* Bindable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACDE261A50687300134C98 /* Bindable.swift */; };
 		ABACDE2F1A50687300134C98 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACDE271A50687300134C98 /* Database.swift */; };
 		ABACDE301A50687300134C98 /* QueryResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACDE281A50687300134C98 /* QueryResult.swift */; };
@@ -21,6 +20,7 @@
 		ABACDE351A50687300134C98 /* UpdateResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACDE2D1A50687300134C98 /* UpdateResult.swift */; };
 		ABCFAA631A517E2B0042B445 /* PreparationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCFAA621A517E2B0042B445 /* PreparationResult.swift */; };
 		ABCFAA651A517F480042B445 /* DatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCFAA641A517F480042B445 /* DatabaseTests.swift */; };
+		ABE3A5A71D97EEC400F3EC6D /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE3A5A61D97EEC400F3EC6D /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,7 +41,6 @@
 		ABACDE131A50683900134C98 /* BoldTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BoldTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABACDE191A50683900134C98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABACDE1A1A50683900134C98 /* BoldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoldTests.swift; sourceTree = "<group>"; };
-		ABACDE241A50685B00134C98 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		ABACDE261A50687300134C98 /* Bindable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bindable.swift; sourceTree = "<group>"; };
 		ABACDE271A50687300134C98 /* Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		ABACDE281A50687300134C98 /* QueryResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryResult.swift; sourceTree = "<group>"; };
@@ -54,6 +53,7 @@
 		ABCFAA601A5173570042B445 /* Tasks.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Tasks.txt; sourceTree = "<group>"; };
 		ABCFAA621A517E2B0042B445 /* PreparationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparationResult.swift; sourceTree = "<group>"; };
 		ABCFAA641A517F480042B445 /* DatabaseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseTests.swift; sourceTree = "<group>"; };
+		ABE3A5A61D97EEC400F3EC6D /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ABACDE251A50685B00134C98 /* libsqlite3.dylib in Frameworks */,
+				ABE3A5A71D97EEC400F3EC6D /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,10 +80,10 @@
 			isa = PBXGroup;
 			children = (
 				AB8DCAC31A51585200238780 /* Bold-Common.xcconfig */,
-				ABACDE241A50685B00134C98 /* libsqlite3.dylib */,
 				ABACDE0A1A50683900134C98 /* Bold */,
 				ABACDE171A50683900134C98 /* BoldTests */,
 				ABACDE091A50683900134C98 /* Products */,
+				ABE3A5A51D97EEC300F3EC6D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,6 +142,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		ABE3A5A51D97EEC300F3EC6D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ABE3A5A61D97EEC400F3EC6D /* libsqlite3.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -198,14 +206,16 @@
 		ABACDDFF1A50683900134C98 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Christian Kienle";
 				TargetAttributes = {
 					ABACDE071A50683900134C98 = {
 						CreatedOnToolsVersion = 6.1.1;
+						LastSwiftMigration = 0800;
 					};
 					ABACDE121A50683900134C98 = {
 						CreatedOnToolsVersion = 6.1.1;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -296,16 +306,20 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -342,8 +356,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -352,6 +368,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -361,6 +378,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -381,10 +399,12 @@
 				INFOPLIST_FILE = Bold/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.thermal-core.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Bold/Bold-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -403,9 +423,11 @@
 				INFOPLIST_FILE = Bold/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.thermal-core.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Bold/Bold-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -425,7 +447,9 @@
 				);
 				INFOPLIST_FILE = BoldTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.thermal-core.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -441,7 +465,9 @@
 				);
 				INFOPLIST_FILE = BoldTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.thermal-core.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

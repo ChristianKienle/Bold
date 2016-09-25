@@ -7,12 +7,12 @@ public enum UpdateResult {
   /**
     Used to represent a successful update.
   */
-  case Success
+  case success
   
   /**
     Used to represent a failed update.
   */
-  case Failure(Error)
+  case failure(Error)
   
   /**
     Is used to determine if the update query was successful.
@@ -21,8 +21,8 @@ public enum UpdateResult {
   */
   public var isSuccess:Bool {
     switch self {
-      case .Success: return true
-      case .Failure: return false
+      case .success: return true
+      case .failure: return false
     }
   }
   /**

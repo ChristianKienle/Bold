@@ -68,7 +68,7 @@ class DatabaseTests : XCTestCase {
     // gender: a double value between 0 and 1
     XCTAssertTrue(db.executeUpdate("CREATE TABLE Person (id, name, age, gender, info, picture, isCool)").isSuccess)
     
-    let picture = NSData(bytes: [0xFF, 0xD9] as [Byte], length: 2)
+    let picture = Data(bytes: UnsafePointer<UInt8>([0xFF, 0xD9] as [UInt8]), count: 2)
     XCTAssertTrue(db.executeUpdate("INSERT INTO Person (id, name, age, gender, info, picture, isCool) VALUES (:id, :name, :age, :gender, :info, :picture, :isCool)", arguments:["id" : "1", "name" : "Christian", "age" : 20, "gender" : 0.75, "info" : nil, "picture" : picture, "isCool" : true]).isSuccess)
     let result = db.executeQuery("SELECT id, name, age, gender, info, picture, isCool FROM Person")
     XCTAssertTrue(result.isSuccess)
@@ -89,7 +89,7 @@ class DatabaseTests : XCTestCase {
       XCTAssertEqual(row.stringValue("name")!, "Christian")
       XCTAssertEqual(row.intValue("age")!, 20)
       if let gender = row.doubleValue("gender") {
-        XCTAssertEqualWithAccuracy(gender, 0.75, 0.01)
+        XCTAssertEqualWithAccuracy(gender, 0.75, accuracy: 0.01)
         
       } else {
         XCTFail("gender cannot be nil")
@@ -98,7 +98,7 @@ class DatabaseTests : XCTestCase {
       XCTAssertEqual(row.boolValue("isCool")!, true)
       
       consumed = true
-      rowCount++
+      rowCount += 1
     }
     XCTAssertTrue(rowCount == 1)
     XCTAssertTrue(consumed)
@@ -123,7 +123,7 @@ class DatabaseTests : XCTestCase {
       XCTAssertEqual(row.stringValue("firstName")!, "Christian")
       XCTAssertEqual(row.stringValue("lastName")!, "Kienle")
       consumed = true
-      rowCount++
+      rowCount += 1
     }
     XCTAssertTrue(rowCount == 1)
     XCTAssertTrue(consumed)
@@ -147,7 +147,7 @@ class DatabaseTests : XCTestCase {
       XCTAssertEqual(row.stringValue("firstName")!, "Christian")
       XCTAssertEqual(row.stringValue("lastName")!, "Kienle")
       consumed = true
-      rowCount++
+      rowCount += 1
     }
     XCTAssertTrue(rowCount == 1)
     XCTAssertTrue(consumed)
@@ -185,7 +185,7 @@ class DatabaseTests : XCTestCase {
         XCTAssertEqual(row.stringValue("t.fn")!, "Christian")
         XCTAssertEqual(row.stringValue("t.ln")!, "Kienle")
         consumed = true
-        rowCount++
+        rowCount += 1
     }
     XCTAssertTrue(rowCount == 1)
     XCTAssertTrue(consumed)
@@ -213,7 +213,7 @@ class DatabaseTests : XCTestCase {
         XCTAssertEqual(row.stringValue("firstName")!, "Irina")
         XCTAssertEqual(row.stringValue("lastName")!, "Kienle")
       }
-      count++
+      count += 1
     }
     XCTAssertTrue(count == 2)
     

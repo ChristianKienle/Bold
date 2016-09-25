@@ -17,12 +17,12 @@ public enum QueryResult {
   /**
     Represents a successful query.
   */
-  case Success(ResultSet)
+  case success(ResultSet)
   
   /**
     Represents a failed query.
   */
-  case Failure(Error)
+  case failure(Error)
 
   /**
     Is used to determine if the query was successful.
@@ -51,8 +51,8 @@ public enum QueryResult {
 
   public var resultSet:ResultSet? {
     switch self {
-      case .Success(let result): return result
-      case .Failure: return nil
+      case .success(let result): return result
+      case .failure: return nil
     }
   }
   
@@ -68,47 +68,44 @@ public enum QueryResult {
     return false
   }
   
-  public func consumeResultSet(consumer: (resultSet:ResultSet) -> Void) {
-    if let resultSet = self.resultSet {
-      consumer(resultSet: resultSet)
+  public typealias Consumer = (_ resultSet: ResultSet) -> (Void)
+  public func consumeResultSet(_ consumer: Consumer) {
+    guard let resultSet = resultSet else {
+      return
     }
+    consumer(resultSet)
   }
   
-  public func consumeResultSetAndClose(consumer: (resultSet:ResultSet) -> Void) {
+  public func consumeResultSetAndClose(_ consumer: Consumer) {
     consumeResultSet { set in
-      consumer(resultSet:set)
-      set.close()
+      consumer(set)
+      let _ = set.close()
     }
   }
 }
 
-public struct QueryResultGenerator : GeneratorType {
+public struct QueryResultGenerator : IteratorProtocol {
   public typealias Element = Row
-  let queryResult:QueryResult
-  init(queryResult:QueryResult) {
+  let queryResult: QueryResult
+  init(queryResult: QueryResult) {
     self.queryResult = queryResult
   }
   public func next() -> Element? {
-    if queryResult.isFailure {
+    guard let resultSet = queryResult.resultSet else {
       return nil
     }
-    if let resultSet = queryResult.resultSet {
-      let hadNext = resultSet.next()
-      if !hadNext {
-        // Close
-        resultSet.close()
-        return nil
-      }
-      return resultSet.row
+    guard resultSet.next() else {
+      let _ = resultSet.close()
+      return nil
     }
-    return nil
+    return resultSet.row
   }
 }
 
-extension QueryResult : SequenceType {
+extension QueryResult : Sequence {
   public typealias GeneratorType = QueryResultGenerator
 
-  public func generate() -> GeneratorType {
+  public func makeIterator() -> GeneratorType {
     return QueryResultGenerator(queryResult:self)
   }
 }

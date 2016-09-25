@@ -1,10 +1,10 @@
 import Foundation
 
-public class Statement {
-  let statementHandle:COpaquePointer = nil
-  let database:Database
+final public class Statement {
+  let statementHandle: OpaquePointer?
+  let database: Database
   
-  internal init(statementHandle:COpaquePointer, database:Database) {
+  internal init(statementHandle: OpaquePointer, database: Database) {
     self.statementHandle = statementHandle
     self.database = database
   }
@@ -23,7 +23,7 @@ public class Statement {
   // - Double
   // - NSData
   // - nil
-  internal func bind(columnIndex:Int32, value:Bindable?) -> Bool {
+  internal func bind(_ columnIndex:Int32, value:Bindable?) -> Bool {
     if let value = value {
       return value.bindTo(self, atIndex: columnIndex)
     }
@@ -35,12 +35,18 @@ public class Statement {
     return (status == SQLITE_ROW) || (status == SQLITE_DONE)
   }
   
-  internal func value(columnIndex:Int32) -> String {
+  internal func value(_ columnIndex:Int32) -> String {
     let text = sqlite3_column_text(self.statementHandle, columnIndex)
-    return String.fromCString(UnsafePointer<CChar>(text))!
+//    let realTest: String? = text?.withMemoryRebound(to: CChar.self, capacity: 3, { input in
+//      
+//    })
+//    UnsafePointer<CChar>.withMemoryRebound(capacity: 3) {
+//    
+//    }
+    return String(cString: text!)
   }
   
-  private func columnType(columnIndex:Int32) -> Int32 {
+  fileprivate func columnType(_ columnIndex:Int32) -> Int32 {
     return sqlite3_column_type(self.statementHandle, columnIndex)
   }
 }

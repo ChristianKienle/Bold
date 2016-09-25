@@ -30,45 +30,45 @@ public protocol Bindable  {
     :param: atIndex The index of the column which self has to be bound.
     :returns: true if self could be bound to the statement, otherwise false.
   */
-  func bindTo(statement:Statement, atIndex:Int32) -> Bool
+  func bindTo(_ statement:Statement, atIndex:Int32) -> Bool
 }
 
 // MARK: Convenience
-private let SQLITE_TRANSIENT = sqlite3_destructor_type(COpaquePointer(bitPattern: -1))
+private let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
 
 // MARK: Types conforming to Bindable by default
 extension String : Bindable {
-  public func bindTo(statement:Statement, atIndex:Int32) -> Bool {
-    let status = sqlite3_bind_text(statement.statementHandle, atIndex, self.cStringUsingEncoding(NSUTF8StringEncoding)!, -1, SQLITE_TRANSIENT)
+  public func bindTo(_ statement:Statement, atIndex:Int32) -> Bool {
+    let status = sqlite3_bind_text(statement.statementHandle, atIndex, self.cString(using: String.Encoding.utf8)!, -1, SQLITE_TRANSIENT)
     return status == SQLITE_OK
   }
 }
 
 extension Int : Bindable {
-  public func bindTo(statement:Statement, atIndex:Int32) -> Bool {
+  public func bindTo(_ statement:Statement, atIndex:Int32) -> Bool {
     let status = sqlite3_bind_int(statement.statementHandle, atIndex, Int32(self))
     return status == SQLITE_OK
   }
 }
 
 extension Double : Bindable {
-  public func bindTo(statement:Statement, atIndex:Int32) -> Bool {
+  public func bindTo(_ statement:Statement, atIndex:Int32) -> Bool {
     let status = sqlite3_bind_double(statement.statementHandle, atIndex, self)
     return status == SQLITE_OK
   }
 }
 
-extension NSData : Bindable {
-  public func bindTo(statement:Statement, atIndex:Int32) -> Bool {
-    var rawData = self.bytes
-    let status = sqlite3_bind_blob(statement.statementHandle, atIndex, rawData, Int32(self.length), SQLITE_TRANSIENT)
+extension Data : Bindable {
+  public func bindTo(_ statement:Statement, atIndex:Int32) -> Bool {
+    let rawData = (self as NSData).bytes
+    let status = sqlite3_bind_blob(statement.statementHandle, atIndex, rawData, Int32(self.count), SQLITE_TRANSIENT)
     return status == SQLITE_OK
   }
 }
 
 extension Bool : Bindable {
-  public func bindTo(statement:Statement, atIndex:Int32) -> Bool {
-    let intValue = Int(self)
+  public func bindTo(_ statement:Statement, atIndex:Int32) -> Bool {
+    let intValue = self ? 1 : 0
     return intValue.bindTo(statement, atIndex: atIndex)
   }
 }

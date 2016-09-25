@@ -3,11 +3,11 @@ import Foundation
 /**
   Represents a result set. You usually do not interact with the result set directly but you can.
 */
-public class ResultSet {
+open class ResultSet {
   let statement:Statement
   
   // MARK: Creating
-  public init(statement:Statement) {
+  public init(statement: Statement) {
     self.statement = statement
   }
   
@@ -17,7 +17,7 @@ public class ResultSet {
   
     :returns: true if there is another row, false if there isn't or if an error occurred.
   */
-  public func next() -> Bool {
+  open func next() -> Bool {
     return step() == SQLITE_ROW
   }
   
@@ -26,14 +26,14 @@ public class ResultSet {
   
     :returns: true if the result set could be closed, otherwise false.
   */
-  public func close() -> Bool {
+  open func close() -> Bool {
     return statement.close()
   }
   
   /**
     Returns the number of columns in the result set.
   */
-  public var columnCount:Int32 {
+  open var columnCount:Int32 {
     return sqlite3_column_count(statement.statementHandle)
   }
 
@@ -49,13 +49,14 @@ extension ResultSet {
   */
   public var row:Row {
     var valuesByColumnNames = [String:Bindable?]()
-    for index in 0...columnCount {
-      let rawColumnName = sqlite3_column_name(statement.statementHandle, index)
-      let columnName = String.fromCString(rawColumnName)
-      let value = self.value(index)
-      if let columnName = columnName {
-        valuesByColumnNames[columnName] = value
+    let columnIndexes = (0..<columnCount)
+    columnIndexes.forEach { index in
+      guard let rawColumnName = sqlite3_column_name(statement.statementHandle, index) else {
+        return
       }
+      let columnName = String(cString: rawColumnName)
+      let value = self.value(index)
+      valuesByColumnNames[columnName] = value
     }
     return Row(valuesByColumnNames:valuesByColumnNames)
   }
@@ -68,9 +69,9 @@ extension ResultSet {
     :param: columnIndex The index of the column.
     :returns: The string value of the column at the specified column in the current row.
   */
-  public func stringValue(columnIndex:Int32) -> String {
+  public func stringValue(_ columnIndex:Int32) -> String {
     let text = sqlite3_column_text(statement.statementHandle, columnIndex)
-    return String.fromCString(UnsafePointer<CChar>(text))!
+    return String(cString: text!)
   }
   
   /**
@@ -78,7 +79,7 @@ extension ResultSet {
     :param: columnIndex The index of the column.
     :returns: The int32 value of the column at the specified column in the current row.
   */
-  public func int32Value(columnIndex:Int32) -> Int32 {
+  public func int32Value(_ columnIndex:Int32) -> Int32 {
     let value:Int32 = sqlite3_column_int(statement.statementHandle, columnIndex)
     return value
   }
@@ -88,7 +89,7 @@ extension ResultSet {
     :param: columnIndex The index of the column.
     :returns: The int value of the column at the specified column in the current row.
   */
-  public func intValue(columnIndex:Int32) -> Int {
+  public func intValue(_ columnIndex:Int32) -> Int {
     let value = int32Value(columnIndex)
     return Int(value)
   }
@@ -98,7 +99,7 @@ extension ResultSet {
     :param: columnIndex The index of the column.
     :returns: The double value of the column at the specified column in the current row.
   */
-  public func doubleValue(columnIndex:Int32) -> Double {
+  public func doubleValue(_ columnIndex:Int32) -> Double {
     let value = sqlite3_column_double(statement.statementHandle, columnIndex)
     return value
   }
@@ -108,14 +109,14 @@ extension ResultSet {
     :param: columnIndex The index of the column.
     :returns: The data value of the column at the specified column in the current row.
   */
-  public func dataValue(columnIndex:Int32) -> NSData {
-    let rawData:UnsafePointer<Void> = sqlite3_column_blob(statement.statementHandle, columnIndex)
+  public func dataValue(_ columnIndex:Int32) -> Data {
+    let rawData:UnsafeRawPointer = sqlite3_column_blob(statement.statementHandle, columnIndex)
     let size:Int = Int(sqlite3_column_bytes(statement.statementHandle, columnIndex))
-    let value = NSData(bytes: rawData, length: size)
+    let value = Data(bytes: rawData, count: size)
     return value
   }
   
-  internal func value(columnIndex:Int32) -> Bindable? {
+  internal func value(_ columnIndex:Int32) -> Bindable? {
     let columnType = sqlite3_column_type(statement.statementHandle, columnIndex)
     if columnType == SQLITE_TEXT {
       return stringValue(columnIndex)
