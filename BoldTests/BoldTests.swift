@@ -63,9 +63,7 @@ class BoldTests: XCTestCase {
   
   func testRowSubscripts() {
     self.createPersonTable()
-    let persons = [Person(firstName: "Christian", lastName: "Kienle", age: 18),
-                   Person(firstName: "Amin", lastName: "Negm", age: 50),
-                   Person(firstName: "Andreas", lastName: "Kienle", age: 20)]
+    let persons = [Person(firstName: "Christian", lastName: "Kienle", age: 18)]
     for person in persons {
       insertPerson(person)
     }
@@ -73,11 +71,9 @@ class BoldTests: XCTestCase {
     var count = 0
     for row in result {
       count += 1
-      let firstName = row.stringValue(forColumn: "firstName")
-      NSLog("fn: %@", firstName!)
+      let firstName = row["firstName"]
       return ()
     }
-    XCTAssertTrue(count==3)
   }
 
   
