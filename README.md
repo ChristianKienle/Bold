@@ -1,8 +1,5 @@
 ![Alt text](/GFX/logo.png?raw=true "Bold Logo")
 
-
-
-
 # Build Status
 | Branch        | Status           | 
 | ------------- |:-------------:|
@@ -10,7 +7,6 @@
 | Develop      | [![Build Status](https://travis-ci.org/ChristianKienle/Bold.svg?branch=develop)](https://travis-ci.org/ChristianKienle/Bold)      |
 
 A lightweight and extensible SQLite wrapper written in Swift by [@CocoaPimper](https://twitter.com/CocoaPimper). 
-
 
 # Why yet another SQLite wrapper?
 I wanted to dive into Swift and writing a SQLite wrapper seemed like a good thing to do. So **Bold** is basically a just for fun project. 
@@ -20,17 +16,16 @@ I wanted to dive into Swift and writing a SQLite wrapper seemed like a good thin
 The example below creates an in-memory database, opens it, creates a table, inserts a row and then queries the table. Please note that the result is closed automatically after a complete iteration by using `for-in`.
 
     let db = Database(URL:":memory:")
-    let _ = db.open()
-    db.executeUpdate(query: "CREATE TABLE Person (firstName, lastName)")
+    db.open()
+    db.update("CREATE TABLE Person (firstName, lastName)")
     
     let args = ["firstName" : "Christian", "lastName" : "Kienle"]
-    db.executeUpdate(query: "INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:args)
+    db.update("INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:args)
     
-    let result = db.executeQuery(query: "SELECT firstName, lastName FROM Person")
+    let result = db.query(query: "SELECT firstName, lastName FROM Person")
     for row in result {
-        guard let firstName = row.stringValue(forColumn: "firstName"), lastName = row.stringValue(forColumn: "lastName") else {
-            return
-        }
+        let firstName = row["firstName"].string
+        let lastName = row["lastName"].string
         println("firstName: \(firstName)")
         println("lastName: \(lastName)")
     }
@@ -55,7 +50,7 @@ You can support custom data types for input arguments simply by implementing `Bi
 This is all you have to do. Now you could use UUID like this in combination with **Bold**:
 
 	let uuid = UUID()
-  db.executeUpdate(query: "INSERT INTO Person (id) VALUES (:id)", arguments:["id" : uuid])
+  db.update("INSERT INTO Person (id) VALUES (:id)", arguments:["id" : uuid])
     
 ## Extend Types for Output Arguments
 When you access the contents of a row you access the data by using methods like `stringValue(columnName:)`, `intValue(columnName:)` and so on. If you would like to add support for your own data type (for example a method that uses the binary data in a column to create a `UIImage`) you simply extend `Row`. Let's see how this works with our custom `UUID` class from above.
