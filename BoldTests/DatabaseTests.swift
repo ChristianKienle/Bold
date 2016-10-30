@@ -13,27 +13,27 @@ class DatabaseTests : XCTestCase {
   
   func testThatExecuteUpdateFailsOnClosedDatabase() {
     let db = Database(URL:":memory:")
-    XCTAssertTrue(db.executeUpdate(query: "CREATE TABLE Person (firstName, lastName)").isFailure)
+    XCTAssertTrue(db.update("CREATE TABLE Person (firstName, lastName)").isFailure)
   }
 
   func testThatExecuteQueryFailsWithBadStatement() {
     let db = Database(URL:":memory:")
     XCTAssertTrue(db.open())
-    XCTAssertTrue(db.executeUpdate(query: "this is just random noise").isFailure)
+    XCTAssertTrue(db.update("this is just random noise").isFailure)
   }
   
   func testThatPragmaVacuumWorks() {
     let db = Database(URL:":memory:")
     XCTAssertTrue(db.open())
-    XCTAssertTrue(db.executeUpdate(query: "VACUUM").isSuccess)
+    XCTAssertTrue(db.update("VACUUM").isSuccess)
   }
   
   func testThatResultIsCaseSensitive() {
     let db = Database(URL:":memory:")
     XCTAssertTrue(db.open())
-    XCTAssertTrue(db.executeUpdate(query: "CREATE TABLE Person (firstName, lastName)").isSuccess)
-    XCTAssertTrue(db.executeUpdate(query: "INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Christian", "lastName" : "Kienle"]).isSuccess)
-    let result = db.executeQuery(query: "SELECT firstName, lastName FROM Person")
+    XCTAssertTrue(db.update("CREATE TABLE Person (firstName, lastName)").isSuccess)
+    XCTAssertTrue(db.update("INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Christian", "lastName" : "Kienle"]).isSuccess)
+    let result = db.query("SELECT firstName, lastName FROM Person")
     XCTAssertTrue(result.isSuccess)
     var consumed = false
     for row in result {
@@ -66,11 +66,11 @@ class DatabaseTests : XCTestCase {
     let db = Database(URL:":memory:")
     XCTAssertTrue(db.open())
     // gender: a double value between 0 and 1
-    XCTAssertTrue(db.executeUpdate(query: "CREATE TABLE Person (id, name, age, gender, info, picture, isCool)").isSuccess)
+    XCTAssertTrue(db.update("CREATE TABLE Person (id, name, age, gender, info, picture, isCool)").isSuccess)
     
     let picture = Data(bytes: UnsafePointer<UInt8>([0xFF, 0xD9] as [UInt8]), count: 2)
-    XCTAssertTrue(db.executeUpdate(query: "INSERT INTO Person (id, name, age, gender, info, picture, isCool) VALUES (:id, :name, :age, :gender, :info, :picture, :isCool)", arguments:["id" : "1", "name" : "Christian", "age" : 20, "gender" : 0.75, "info" : nil, "picture" : picture, "isCool" : true]).isSuccess)
-    let result = db.executeQuery(query: "SELECT id, name, age, gender, info, picture, isCool FROM Person")
+    XCTAssertTrue(db.update("INSERT INTO Person (id, name, age, gender, info, picture, isCool) VALUES (:id, :name, :age, :gender, :info, :picture, :isCool)", arguments:["id" : "1", "name" : "Christian", "age" : 20, "gender" : 0.75, "info" : nil, "picture" : picture, "isCool" : true]).isSuccess)
+    let result = db.query("SELECT id, name, age, gender, info, picture, isCool FROM Person")
     XCTAssertTrue(result.isSuccess)
     var consumed = false
     var rowCount = 0
@@ -108,9 +108,9 @@ class DatabaseTests : XCTestCase {
   func testThatNamedParametersWorks() {
     let db = Database(URL:":memory:")
     XCTAssertTrue(db.open())
-    XCTAssertTrue(db.executeUpdate(query: "CREATE TABLE Person (firstName, lastName)").isSuccess)
-    XCTAssertTrue(db.executeUpdate(query: "INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Christian", "lastName" : "Kienle"]).isSuccess)
-    let result = db.executeQuery(query: "SELECT firstName, lastName FROM Person")
+    XCTAssertTrue(db.update("CREATE TABLE Person (firstName, lastName)").isSuccess)
+    XCTAssertTrue(db.update("INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Christian", "lastName" : "Kienle"]).isSuccess)
+    let result = db.query("SELECT firstName, lastName FROM Person")
     XCTAssertTrue(result.isSuccess)
     var consumed = false
     var rowCount = 0
@@ -132,9 +132,9 @@ class DatabaseTests : XCTestCase {
   func testThatIndexedParametersWorks() {
     let db = Database(URL:":memory:")
     XCTAssertTrue(db.open())
-    XCTAssertTrue(db.executeUpdate(query: "CREATE TABLE Person (firstName, lastName)").isSuccess)
-    XCTAssertTrue(db.executeUpdate(query: "INSERT INTO Person (firstName, lastName) VALUES (?, ?)", arguments:["Christian", "Kienle"]).isSuccess)
-    let result = db.executeQuery(query: "SELECT firstName, lastName FROM Person")
+    XCTAssertTrue(db.update("CREATE TABLE Person (firstName, lastName)").isSuccess)
+    XCTAssertTrue(db.update("INSERT INTO Person (firstName, lastName) VALUES (?, ?)", arguments:["Christian", "Kienle"]).isSuccess)
+    let result = db.query("SELECT firstName, lastName FROM Person")
     XCTAssertTrue(result.isSuccess)
     var consumed = false
     var rowCount = 0
@@ -156,24 +156,24 @@ class DatabaseTests : XCTestCase {
   func testThatTooManyNamedArgumentsFail() {
     let db = Database(URL:":memory:")
     XCTAssertTrue(db.open())
-    XCTAssertTrue(db.executeUpdate(query: "CREATE TABLE Person (firstName, lastName)").isSuccess)
-    XCTAssertTrue(db.executeUpdate(query: "INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Christian", "lastName" : "Kienle", "age" : 1]).isFailure)
+    XCTAssertTrue(db.update("CREATE TABLE Person (firstName, lastName)").isSuccess)
+    XCTAssertTrue(db.update("INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Christian", "lastName" : "Kienle", "age" : 1]).isFailure)
   }
 
   func testThatTooManyIndexedArgumentsFail() {
     let db = Database(URL:":memory:")
     XCTAssertTrue(db.open())
-    XCTAssertTrue(db.executeUpdate(query: "CREATE TABLE Person (firstName, lastName)").isSuccess)
+    XCTAssertTrue(db.update("CREATE TABLE Person (firstName, lastName)").isSuccess)
     let args: [Bindable?] = ["Christian", "Kienle", 1]
-    XCTAssertTrue(db.executeUpdate(query: "INSERT INTO Person (firstName, lastName) VALUES (?, ?)", arguments: args).isFailure)
+    XCTAssertTrue(db.update("INSERT INTO Person (firstName, lastName) VALUES (?, ?)", arguments: args).isFailure)
   }
 
   func testThatColumnNamesCanContainPeriods() {
     let db = Database(URL:":memory:")
     XCTAssertTrue(db.open())
-    XCTAssertTrue(db.executeUpdate(query: "CREATE TABLE Person (firstName, lastName)").isSuccess)
-    XCTAssertTrue(db.executeUpdate(query: "INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Christian", "lastName" : "Kienle"]).isSuccess)
-    let result = db.executeQuery(query: "SELECT firstName as 't.fn', lastName as 't.ln' FROM Person")
+    XCTAssertTrue(db.update("CREATE TABLE Person (firstName, lastName)").isSuccess)
+    XCTAssertTrue(db.update("INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Christian", "lastName" : "Kienle"]).isSuccess)
+    let result = db.query("SELECT firstName as 't.fn', lastName as 't.ln' FROM Person")
     XCTAssertTrue(result.isSuccess)
     var consumed = false
     var rowCount = 0
@@ -195,10 +195,10 @@ class DatabaseTests : XCTestCase {
   func testThatForLoopIsWorking() {
     let db = Database(URL:":memory:")
     XCTAssertTrue(db.open())
-    XCTAssertTrue(db.executeUpdate(query: "CREATE TABLE Person (firstName, lastName)").isSuccess)
-    XCTAssertTrue(db.executeUpdate(query: "INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Christian", "lastName" : "Kienle"]).isSuccess)
-    XCTAssertTrue(db.executeUpdate(query: "INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Irina", "lastName" : "Kienle"]).isSuccess)
-    let result = db.executeQuery(query: "SELECT firstName, lastName FROM Person")
+    XCTAssertTrue(db.update("CREATE TABLE Person (firstName, lastName)").isSuccess)
+    XCTAssertTrue(db.update("INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Christian", "lastName" : "Kienle"]).isSuccess)
+    XCTAssertTrue(db.update("INSERT INTO Person (firstName, lastName) VALUES (:firstName, :lastName)", arguments:["firstName" : "Irina", "lastName" : "Kienle"]).isSuccess)
+    let result = db.query("SELECT firstName, lastName FROM Person")
     XCTAssertTrue(result.isSuccess)
     var count = 0
     for row in result {
