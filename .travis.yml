@@ -2,5 +2,7 @@ os:
   - osx
 language: objective-c
 osx_image: xcode8
+env:
+  - SWIFT_VERSION=3.0
 before_install:
 script: xcodebuild  -verbose -scheme Bold -workspace Bold-WS.xcworkspace  build test
