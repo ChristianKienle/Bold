@@ -1,6 +1,13 @@
 ![Alt text](/GFX/logo.png?raw=true "Bold Logo")
 
-[![Build Status](https://travis-ci.org/ChristianKienle/Bold.svg?branch=master)](https://travis-ci.org/ChristianKienle/Bold)
+
+
+
+# Build Status
+| Branch        | Status           | 
+| ------------- |:-------------:|
+| Master      | [![Build Status](https://travis-ci.org/ChristianKienle/Bold.svg?branch=master)](https://travis-ci.org/ChristianKienle/Bold) |
+| Develop      | [![Build Status](https://travis-ci.org/ChristianKienle/Bold.svg?branch=develop)](https://travis-ci.org/ChristianKienle/Bold)      |
 
 A lightweight and extensible SQLite wrapper written in Swift by [@CocoaPimper](https://twitter.com/CocoaPimper). 
 
