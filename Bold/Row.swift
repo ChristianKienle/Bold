@@ -14,7 +14,9 @@ public struct Row {
 }
 
 public struct SQLValue {
-  
+  var string: String? {
+    return nil
+  }
 }
 
 // MARK: General
