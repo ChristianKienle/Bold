@@ -34,7 +34,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AB8DCAC31A51585200238780 /* Bold-Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Bold-Common.xcconfig"; path = "Bold/Bold-Common.xcconfig"; sourceTree = "<group>"; };
 		ABACDE081A50683900134C98 /* Bold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Bold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABACDE0C1A50683900134C98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABACDE0D1A50683900134C98 /* Bold-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bold-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -79,7 +78,6 @@
 		ABACDDFE1A50683900134C98 = {
 			isa = PBXGroup;
 			children = (
-				AB8DCAC31A51585200238780 /* Bold-Common.xcconfig */,
 				ABACDE0A1A50683900134C98 /* Bold */,
 				ABACDE171A50683900134C98 /* BoldTests */,
 				ABACDE091A50683900134C98 /* Products */,
@@ -293,7 +291,6 @@
 /* Begin XCBuildConfiguration section */
 		ABACDE1C1A50683900134C98 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB8DCAC31A51585200238780 /* Bold-Common.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
@@ -332,7 +329,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -345,7 +342,6 @@
 		};
 		ABACDE1D1A50683900134C98 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB8DCAC31A51585200238780 /* Bold-Common.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
@@ -377,7 +373,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -389,7 +385,6 @@
 		};
 		ABACDE1F1A50683900134C98 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB8DCAC31A51585200238780 /* Bold-Common.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -414,7 +409,6 @@
 		};
 		ABACDE201A50683900134C98 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB8DCAC31A51585200238780 /* Bold-Common.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -438,7 +432,6 @@
 		};
 		ABACDE221A50683900134C98 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB8DCAC31A51585200238780 /* Bold-Common.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -460,7 +453,6 @@
 		};
 		ABACDE231A50683900134C98 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB8DCAC31A51585200238780 /* Bold-Common.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
