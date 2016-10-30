@@ -37,6 +37,55 @@ class BoldTests: XCTestCase {
     }
   }
   
+  func testTransactions() {
+    createPersonTable()
+    XCTAssertTrue(database.beginTransaction())
+    guard database.executeUpdate(query: "INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil]).isSuccess else {
+      XCTFail()
+      return
+    }
+    XCTAssertTrue(database.commit())
+    let queryResult = database.executeQuery(query: "SELECT COUNT(*) AS COUNT FROM PERSON")
+    XCTAssertTrue(queryResult.isSuccess)
+    guard let set = queryResult.resultSet else {
+      XCTFail(queryResult.error?.message ?? "")
+      return
+    }
+    XCTAssertTrue(set.next())
+    let row = set.row
+    guard let count = row["COUNT"].int, count == 1 else {
+      XCTFail()
+      return
+    }
+  }
+  
+  func testAsyncTransactions() {
+    createPersonTable()
+    let ex = expectation(description: "wait for transaction to finish")
+    database.asyncTransaction { transaction in
+      guard self.database.executeUpdate(query: "INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil]).isSuccess else {
+        XCTFail()
+        return
+      }
+      ex.fulfill()
+    }
+
+    waitForExpectations(timeout: 0.5, handler: { error in
+      let queryResult = self.database.executeQuery(query: "SELECT COUNT(*) AS COUNT FROM PERSON")
+      XCTAssertTrue(queryResult.isSuccess)
+      guard let set = queryResult.resultSet else {
+        XCTFail(queryResult.error?.message ?? "")
+        return
+      }
+      XCTAssertTrue(set.next())
+      let row = set.row
+      guard let count = row["COUNT"].int, count == 1 else {
+        XCTFail()
+        return
+      }
+    })
+  }
+  
   func testMalformedQuery() {
     let result = self.database.executeQuery(query: "CREATE TABL PERSON (firstName, lastName, age)")
     XCTAssertTrue(result.isSuccess == false)

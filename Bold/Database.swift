@@ -10,6 +10,7 @@ import Foundation
  */
 final public class Database {
   fileprivate var URL: String
+  private let queue = DispatchQueue(label: "de.christian-kienle.bold.database")
   private var databaseHandle: OpaquePointer?
   
   /**
@@ -39,6 +40,36 @@ final public class Database {
    */
   public func close() -> Bool {
     return sqlite3_close(databaseHandle) == SQLITE_OK
+  }
+  
+  @discardableResult public func beginTransaction() -> Bool {
+    return executeUpdate(query: "begin exclusive transaction").isSuccess
+  }
+  @discardableResult public func commit() -> Bool {
+    return executeUpdate(query: "commit transaction").isSuccess
+  }
+  @discardableResult public func rollback() -> Bool {
+    return executeUpdate(query: "rollback transaction").isSuccess
+  }
+  
+  public final class Transaction {
+    fileprivate var canCommit = true
+    public func rollback() {
+      canCommit = false
+    }
+  }
+  public typealias TransactionBlock = (_ transaction: Transaction) -> (Void)
+  public func asyncTransaction(_ transactionBlock: @escaping TransactionBlock) {
+    queue.async {
+      let transaction = Transaction()
+      self.beginTransaction()
+      transactionBlock(transaction)
+      guard transaction.canCommit else {
+        self.rollback()
+        return
+      }
+      self.commit()
+    }
   }
   
   /**
