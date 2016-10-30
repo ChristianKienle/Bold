@@ -1,4 +1,4 @@
 language: swift
 osx_image: xcode8
 before_install:
-script: xcodebuild -scheme Bold -workspace Bold-WS.xcworkspace -sdk macosx10.11  build test -verbose
+script: xcodebuild -scheme Bold -workspace Bold-WS.xcworkspace -sdk macosx10.10  build test -verbose
