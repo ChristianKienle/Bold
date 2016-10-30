@@ -49,9 +49,20 @@ public enum QueryResult {
    :returns: a result set if the query succeeded, otherwise nil.
    */
   
-  public var resultSet:ResultSet? {
+  public var resultSet: ResultSet? {
     switch self {
     case .success(let result): return result
+    default: return nil
+    }
+  }
+  /**
+   Is used to get the error if the executed query failed.
+   :returns: an error if the query failed, otherwise nil.
+   */
+  
+  public var error: Error? {
+    switch self {
+    case .failure(let error): return error
     default: return nil
     }
   }
