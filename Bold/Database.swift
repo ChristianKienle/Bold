@@ -29,7 +29,7 @@ final public class Database {
    
    :returns: true if the database could be opened, otherwise false.
    */
-  public func open() -> Bool {
+  @discardableResult public func open() -> Bool {
     return sqlite3_open(URL, &databaseHandle) == SQLITE_OK
   }
   
@@ -43,13 +43,13 @@ final public class Database {
   }
   
   @discardableResult public func beginTransaction() -> Bool {
-    return executeUpdate(query: "begin exclusive transaction").isSuccess
+    return update("begin exclusive transaction").isSuccess
   }
   @discardableResult public func commit() -> Bool {
-    return executeUpdate(query: "commit transaction").isSuccess
+    return update("commit transaction").isSuccess
   }
   @discardableResult public func rollback() -> Bool {
-    return executeUpdate(query: "rollback transaction").isSuccess
+    return update("rollback transaction").isSuccess
   }
   
   public final class Transaction {
@@ -58,12 +58,13 @@ final public class Database {
       canCommit = false
     }
   }
+  
   public typealias TransactionBlock = (_ transaction: Transaction) -> (Void)
-  public func asyncTransaction(_ transactionBlock: @escaping TransactionBlock) {
+  public func async(_ performTransaction: @escaping TransactionBlock) {
     queue.async {
       let transaction = Transaction()
       self.beginTransaction()
-      transactionBlock(transaction)
+      performTransaction(transaction)
       guard transaction.canCommit else {
         self.rollback()
         return
@@ -82,13 +83,13 @@ final public class Database {
    
    Example:
    
-   executeQuery("SELECT * FROM Table WHERE columnA = ?, columnB = ?", arguments:["hello", 123])
+   execute(query: "SELECT * FROM Table WHERE columnA = ?, columnB = ?", arguments:["hello", 123])
    
    :param: query A SQL query which can contain placeholders (?) for the actual values.
    :param: arguments Instances that conform the the Bindable protocol.
    :returns: An instance of QueryResult and never nil. Inspect the QueryResult to find out about the returned rows or about the error.
    */
-  public func executeQuery(query: String, arguments: [Bindable?]) -> QueryResult {
+  public func query(_ query: String, arguments: [Bindable?]) -> QueryResult {
     guard let statement = prepare(statements: query).statement else {
       return .failure(error(reason: .prepareFailed))
     }
@@ -117,13 +118,13 @@ final public class Database {
    
    Example:
    
-   executeQuery("SELECT * FROM Table WHERE columnA = :colA, columnB = colB", arguments:["colA" : "hello", "colB" : 123])
+   execute(query: "SELECT * FROM Table WHERE columnA = :colA, columnB = colB", arguments:["colA" : "hello", "colB" : 123])
    
    :param: query A SQL query which can contain named placeholders (:parameter_name) for the actual values.
    :param: arguments Instances that conform the the Bindable protocol.
    :returns: An instance of QueryResult and never nil. Inspect the QueryResult to find out about the returned rows or about the error.
    */
-  public func executeQuery(query: String, arguments: [String : Bindable?]) -> QueryResult {
+  public func query(_ query: String, arguments: [String : Bindable?]) -> QueryResult {
     guard let statement = prepare(statements: query).statement else {
       return .failure(error(reason: .prepareFailed))
     }
@@ -148,8 +149,8 @@ final public class Database {
   /**
    Executes a query without any arguments/parameters. This is a convenience method that simply calls executeQuery(query:arguments:) with an empty arguments array. See executeQuery(query:arguments:) for more information.
    */
-  public func executeQuery(query: String) -> QueryResult {
-    return executeQuery(query: query, arguments: [Bindable?]())
+  public func query(_ query: String) -> QueryResult {
+    return self.query(query, arguments: [String : Bindable?]())
   }
   
   /**
@@ -168,8 +169,8 @@ final public class Database {
    :param: arguments Instances that conform the the Bindable protocol.
    :returns: An instance of UpdateResult and never nil. Inspect the UpdateResult to find out about the returned rows or about the error.
    */
-  public func executeUpdate(query: String, arguments: [Bindable?]) -> UpdateResult {
-    let result = executeQuery(query: query, arguments:arguments)
+  public func update(_ query: String, arguments: [Bindable?]) -> UpdateResult {
+    let result = self.query(query, arguments:arguments)
     var success = false
     result.consumeResultSetAndClose { resultSet in
       success = resultSet.step() == SQLITE_DONE
@@ -193,8 +194,8 @@ final public class Database {
    :param: arguments Instances that conform the the Bindable protocol.
    :returns: An instance of UpdateResult and never nil. Inspect the UpdateResult to find out about the returned rows or about the error.
    */
-  public func executeUpdate(query: String, arguments: [String : Bindable?]) -> UpdateResult {
-    guard let resultSet = executeQuery(query: query, arguments: arguments).resultSet else {
+  public func update(_ query: String, arguments: [String : Bindable?]) -> UpdateResult {
+    guard let resultSet = self.query(query, arguments: arguments).resultSet else {
       return .failure(error(reason: .executeQueryFailed))
     }
     return resultSet.step() == SQLITE_DONE ? .success : .failure(error(reason: .stepFailed))
@@ -203,8 +204,8 @@ final public class Database {
   /**
    Executes an update query without any arguments/parameters. This is a convenience method that simply calls executeUpdate(query:arguments:) with an empty arguments array. See executeUpdate(query:arguments:) for more information.
    */
-  public func executeUpdate(query: String) -> UpdateResult {
-    return executeUpdate(query: query, arguments: [Bindable?]())
+  public func update(_ query: String) -> UpdateResult {
+    return update(query, arguments: [Bindable?]())
   }
   
   // MARK: Prepare
