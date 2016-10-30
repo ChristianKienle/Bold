@@ -49,7 +49,6 @@
 		ABACDE2C1A50687300134C98 /* Statement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statement.swift; sourceTree = "<group>"; };
 		ABACDE2D1A50687300134C98 /* UpdateResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateResult.swift; sourceTree = "<group>"; };
 		ABACDE361A50697E00134C98 /* Bold.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bold.h; sourceTree = "<group>"; };
-		ABCFAA601A5173570042B445 /* Tasks.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Tasks.txt; sourceTree = "<group>"; };
 		ABCFAA621A517E2B0042B445 /* PreparationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparationResult.swift; sourceTree = "<group>"; };
 		ABCFAA641A517F480042B445 /* DatabaseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseTests.swift; sourceTree = "<group>"; };
 		ABE3A5A61D97EEC400F3EC6D /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
@@ -97,7 +96,6 @@
 		ABACDE0A1A50683900134C98 /* Bold */ = {
 			isa = PBXGroup;
 			children = (
-				ABCFAA601A5173570042B445 /* Tasks.txt */,
 				ABACDE271A50687300134C98 /* Database.swift */,
 				ABACDE261A50687300134C98 /* Bindable.swift */,
 				ABACDE281A50687300134C98 /* QueryResult.swift */,

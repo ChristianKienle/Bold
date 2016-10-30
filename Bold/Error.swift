@@ -7,9 +7,9 @@ public struct Error {
     case executeQueryFailed // Used when executeUpdate failed because executeQuery failed.
     case stepFailed
   }
-  let code:Error.Code
-  let message:String
-  var SQLiteErrorCode:Int32? = nil
+  public let code:Error.Code
+  public let message:String
+  public var SQLiteErrorCode:Int32? = nil
   init(code:Error.Code, message:String, SQLiteErrorCode:Int32? = nil) {
     self.code = code
     self.message = message

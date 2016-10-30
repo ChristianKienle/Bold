@@ -62,18 +62,32 @@ class BoldTests: XCTestCase {
   }
   
   func testRowSubscripts() {
-    self.createPersonTable()
-    let persons = [Person(firstName: "Christian", lastName: "Kienle", age: 18)]
-    for person in persons {
-      insertPerson(person)
+
+    XCTAssertTrue(database.executeUpdate(query: "CREATE TABLE Person (id, name, age, gender, info, picture, isCool)").isSuccess)
+    
+    let picture = Data(bytes: UnsafePointer<UInt8>([0xFF, 0xD9] as [UInt8]), count: 2)
+    XCTAssertTrue(database.executeUpdate(query: "INSERT INTO Person (id, name, age, gender, info, picture, isCool) VALUES (:id, :name, :age, :gender, :info, :picture, :isCool)", arguments:["id" : "1", "name" : "Christian", "age" : 20, "gender" : 0.75, "info" : nil, "picture" : picture, "isCool" : true]).isSuccess)
+    
+
+    let result = database.executeQuery(query: "SELECT * FROM Person", arguments: [:])
+    guard result.isSuccess else {
+      XCTFail(result.error?.message ?? "")
+      return
     }
-    let result = self.database.executeQuery(query: "SELECT firstName, lastName, age FROM PERSON", arguments: [:])
-    var count = 0
-    for row in result {
-      count += 1
-      let firstName = row["firstName"]
-      return ()
+    guard let set = result.resultSet else {
+      XCTFail()
+      return
     }
+    XCTAssertTrue(set.next())
+    let row = set.row
+    
+    XCTAssertEqual(row["id"].string, "1")
+    XCTAssertEqual(row["name"].string, "Christian")
+    XCTAssertEqual(row["age"].int, 20)
+    XCTAssertEqualWithAccuracy(Float(row["gender"].double ?? 0.0), Float(0.75), accuracy: Float(0.1))
+    XCTAssertEqual(row["info"].string, nil)
+    XCTAssertEqual(row["picture"].data, picture)
+    XCTAssertEqual(row["isCool"].bool, nil)
   }
 
   
