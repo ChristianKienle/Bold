@@ -61,6 +61,22 @@ class BoldTests: XCTestCase {
     XCTAssertTrue(count==3)
   }
   
+  func testRowSubscripts() {
+    self.createPersonTable()
+    let persons = [Person(firstName: "Christian", lastName: "Kienle", age: 18)]
+    for person in persons {
+      insertPerson(person)
+    }
+    let result = self.database.executeQuery(query: "SELECT firstName, lastName, age FROM PERSON", arguments: [:])
+    var count = 0
+    for row in result {
+      count += 1
+      let firstName = row["firstName"]
+      return ()
+    }
+  }
+
+  
   func testInsertWithArgumentArray() {
     self.createPersonTable()
     let arguments:Array<Bindable?> = ["Christian", "Kienle", 1]

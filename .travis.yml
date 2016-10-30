@@ -1,5 +1,8 @@
-language: swift
+os:
+  - osx
+language: objective-c
+osx_image: xcode8
+env:
+  - SWIFT_VERSION=3.0
 before_install:
-    - brew update
-    - if brew outdated | grep -qx xctool; then brew upgrade xctool; fi
-script: xctool -workspace Bold-WS.xcworkspace -scheme BoldTests test
+script: xcodebuild  -verbose -scheme Bold -workspace Bold-WS.xcworkspace  build test

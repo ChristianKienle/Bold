@@ -8,6 +8,15 @@ public struct Row {
   init(valuesByColumnNames:[String: Bindable?]) {
     self.valuesByColumnNames = valuesByColumnNames
   }
+  public subscript(column: String) -> SQLValue {
+    return SQLValue()
+  }
+}
+
+public struct SQLValue {
+  var string: String? {
+    return nil
+  }
 }
 
 // MARK: General
