@@ -1,0 +1,5 @@
+language: swift
+before_install:
+    - brew update
+    - if brew outdated | grep -qx xctool; then brew upgrade xctool; fi
+script: xctool -workspace Bold-WS.xcworkspace -scheme BoldTests test
