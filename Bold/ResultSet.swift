@@ -70,7 +70,7 @@ extension ResultSet {
     :param: columnIndex The index of the column.
     :returns: The string value of the column at the specified column in the current row.
   */
-  public func stringValue(forColumn columnIndex:Int32) -> String {
+  private func stringValue(forColumn columnIndex:Int32) -> String {
     guard let text = sqlite3_column_text(statement.statementHandle, columnIndex) else {
       return ""
     }
@@ -82,7 +82,7 @@ extension ResultSet {
     :param: columnIndex The index of the column.
     :returns: The int32 value of the column at the specified column in the current row.
   */
-  public func int32Value(forColumn columnIndex:Int32) -> Int32 {
+  private func int32Value(forColumn columnIndex:Int32) -> Int32 {
     let value:Int32 = sqlite3_column_int(statement.statementHandle, columnIndex)
     return value
   }
@@ -92,7 +92,7 @@ extension ResultSet {
     :param: columnIndex The index of the column.
     :returns: The int value of the column at the specified column in the current row.
   */
-  public func intValue(forColumn columnIndex:Int32) -> Int {
+  private func intValue(forColumn columnIndex:Int32) -> Int {
     let value = int32Value(forColumn: columnIndex)
     return Int(value)
   }
@@ -102,7 +102,7 @@ extension ResultSet {
     :param: columnIndex The index of the column.
     :returns: The double value of the column at the specified column in the current row.
   */
-  public func doubleValue(forColumn columnIndex:Int32) -> Double {
+  private func doubleValue(forColumn columnIndex:Int32) -> Double {
     let value = sqlite3_column_double(statement.statementHandle, columnIndex)
     return value
   }
@@ -112,15 +112,14 @@ extension ResultSet {
     :param: columnIndex The index of the column.
     :returns: The data value of the column at the specified column in the current row.
   */
-  public func dataValue(forColumn columnIndex:Int32) -> Data {
+  private func dataValue(forColumn columnIndex:Int32) -> Data {
     let rawData:UnsafeRawPointer = sqlite3_column_blob(statement.statementHandle, columnIndex)
     let size:Int = Int(sqlite3_column_bytes(statement.statementHandle, columnIndex))
     let value = Data(bytes: rawData, count: size)
     return value
   }
   
-  internal func value(forColumn
-    columnIndex:Int32) -> Bindable? {
+  internal func value(forColumn columnIndex:Int32) -> Bindable? {
     let columnType = sqlite3_column_type(statement.statementHandle, columnIndex)
     if columnType == SQLITE_TEXT {
       return stringValue(forColumn: columnIndex)

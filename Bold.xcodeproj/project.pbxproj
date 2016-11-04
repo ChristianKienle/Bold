@@ -19,6 +19,8 @@
 		ABACBF3A1DC65A5D00C8CC03 /* PreparationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCFAA621A517E2B0042B445 /* PreparationResult.swift */; };
 		ABACBF3C1DC65A7E00C8CC03 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ABACBF3B1DC65A7E00C8CC03 /* libsqlite3.tbd */; };
 		ABACBF3F1DCCE2C000C8CC03 /* DatabaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACBF3E1DCCE2C000C8CC03 /* DatabaseTestCase.swift */; };
+		ABACBF411DCCE97B00C8CC03 /* SQLValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACBF401DCCE97B00C8CC03 /* SQLValue.swift */; };
+		ABACBF421DCCE97B00C8CC03 /* SQLValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACBF401DCCE97B00C8CC03 /* SQLValue.swift */; };
 		ABACDE0E1A50683900134C98 /* Bold-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = ABACDE0D1A50683900134C98 /* Bold-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		ABACDE141A50683900134C98 /* Bold.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABACDE081A50683900134C98 /* Bold.framework */; };
 		ABACDE1B1A50683900134C98 /* BoldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACDE1A1A50683900134C98 /* BoldTests.swift */; };
@@ -52,6 +54,7 @@
 		ABACBF3B1DC65A7E00C8CC03 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		ABACBF3D1DC65CA900C8CC03 /* Bold-iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bold-iOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		ABACBF3E1DCCE2C000C8CC03 /* DatabaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseTestCase.swift; sourceTree = "<group>"; };
+		ABACBF401DCCE97B00C8CC03 /* SQLValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLValue.swift; sourceTree = "<group>"; };
 		ABACDE081A50683900134C98 /* Bold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Bold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABACDE0C1A50683900134C98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABACDE0D1A50683900134C98 /* Bold-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bold-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -140,6 +143,7 @@
 				ABACDE2D1A50687300134C98 /* UpdateResult.swift */,
 				ABACDE291A50687300134C98 /* ResultSet.swift */,
 				ABACDE2A1A50687300134C98 /* Row.swift */,
+				ABACBF401DCCE97B00C8CC03 /* SQLValue.swift */,
 				ABACDE2B1A50687300134C98 /* Error.swift */,
 				ABACDE2C1A50687300134C98 /* Statement.swift */,
 				ABCFAA621A517E2B0042B445 /* PreparationResult.swift */,
@@ -341,6 +345,7 @@
 				ABACBF371DC65A5D00C8CC03 /* Row.swift in Sources */,
 				ABACBF381DC65A5D00C8CC03 /* Error.swift in Sources */,
 				ABACBF351DC65A5D00C8CC03 /* UpdateResult.swift in Sources */,
+				ABACBF421DCCE97B00C8CC03 /* SQLValue.swift in Sources */,
 				ABACBF391DC65A5D00C8CC03 /* Statement.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -357,6 +362,7 @@
 				ABACDE321A50687300134C98 /* Row.swift in Sources */,
 				ABACDE2E1A50687300134C98 /* Bindable.swift in Sources */,
 				ABACDE331A50687300134C98 /* Error.swift in Sources */,
+				ABACBF411DCCE97B00C8CC03 /* SQLValue.swift in Sources */,
 				ABACDE351A50687300134C98 /* UpdateResult.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

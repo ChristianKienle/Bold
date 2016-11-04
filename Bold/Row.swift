@@ -9,16 +9,23 @@ public struct Row {
     let columnName: String
     let value: Bindable?
   }
+  /// MARK: Properties
   fileprivate let items: [Item]
+  fileprivate let _valuesByColumnNames: [String: Bindable?]
+  fileprivate let _valuesByColumnIndexes: [Int32: Bindable?]
+  /// MARK: Creating Rows
   init(items: [Item]) {
     self.items = items
     var valuesByColumnNames = [String: Bindable?]()
+    var valuesByColumnIndexes = [Int32: Bindable?]()
+
     self.items.forEach { (item) in
       valuesByColumnNames[item.columnName] = item.value
+      valuesByColumnIndexes[item.columnIndex] = item.value
     }
     _valuesByColumnNames = valuesByColumnNames
+    _valuesByColumnIndexes = valuesByColumnIndexes
   }
-  fileprivate let _valuesByColumnNames: [String: Bindable?]
   
   public subscript(column: String) -> SQLValue {
     guard let value = _valuesByColumnNames[column] else {
@@ -26,23 +33,14 @@ public struct Row {
     }
     return SQLValue(value)
   }
-}
-
-public struct SQLValue {
-  private let value: Bindable?
-  init(_ value: Bindable?) {
-    self.value = value
-  }
-  public var string: String? { return get() }
-  public var int: Int? { return get() }
-  public var double: Double? { return get() }
-  public var data: Data? { return get() }
-  public var bool: Bool? { return get() }
-
-  public func get<T>() -> T? {
-    return value as? T
+  public subscript(columnIndex columnIndex: Int32) -> SQLValue {
+    guard let value = _valuesByColumnIndexes[columnIndex] else {
+      return SQLValue(nil)
+    }
+    return SQLValue(value)
   }
 }
+
 
 // MARK: General
 extension Row {

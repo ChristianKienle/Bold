@@ -165,7 +165,7 @@ class BoldTests: DatabaseTestCase {
     XCTAssertTrue(queryResult.isSuccess)
     queryResult.consumeResultSet { resultSet in
       while resultSet.next() {
-        let name = resultSet.stringValue(forColumn: 0)
+        let name = resultSet.row[columnIndex: 0].string
         XCTAssertEqual("Christian", name)
       }
     }
