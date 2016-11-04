@@ -39,11 +39,9 @@ private let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.sel
 // MARK: Types conforming to Bindable by default
 extension String : Bindable {
   public func bind(to statement:Statement, atIndex index : Int32) -> Bool {
-    guard let text = self.cString(using: String.Encoding.utf8) else {
-      assertionFailure("Please open an issue at github.")
-      return false
+    return utf8CString.withUnsafeBufferPointer { ptr in
+      return sqlite3_bind_text(statement.statementHandle, index, ptr.baseAddress, -1, SQLITE_TRANSIENT) == SQLITE_OK
     }
-    return sqlite3_bind_text(statement.statementHandle, index, text, -1, SQLITE_TRANSIENT) == SQLITE_OK
   }
 }
 

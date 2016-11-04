@@ -4,33 +4,43 @@ import Foundation
  Represents a row in a result set. You cann add support for custom types just by extending Row. For an example look at boolValue(columnName:) which is simply uses intValue(columnName:) internally.
  */
 public struct Row {
-  fileprivate var valuesByColumnNames = [String: Bindable?]()
-  init(valuesByColumnNames:[String: Bindable?]) {
-    self.valuesByColumnNames = valuesByColumnNames
+  struct Item {
+    let columnIndex: Int32
+    let columnName: String
+    let value: Bindable?
   }
+  /// MARK: Properties
+  fileprivate let items: [Item]
+  fileprivate let _valuesByColumnNames: [String: Bindable?]
+  fileprivate let _valuesByColumnIndexes: [Int32: Bindable?]
+  /// MARK: Creating Rows
+  init(items: [Item]) {
+    self.items = items
+    var valuesByColumnNames = [String: Bindable?]()
+    var valuesByColumnIndexes = [Int32: Bindable?]()
+
+    self.items.forEach { (item) in
+      valuesByColumnNames[item.columnName] = item.value
+      valuesByColumnIndexes[item.columnIndex] = item.value
+    }
+    _valuesByColumnNames = valuesByColumnNames
+    _valuesByColumnIndexes = valuesByColumnIndexes
+  }
+  
   public subscript(column: String) -> SQLValue {
-    guard let value = valuesByColumnNames[column] else {
+    guard let value = _valuesByColumnNames[column] else {
+      return SQLValue(nil)
+    }
+    return SQLValue(value)
+  }
+  public subscript(columnIndex columnIndex: Int32) -> SQLValue {
+    guard let value = _valuesByColumnIndexes[columnIndex] else {
       return SQLValue(nil)
     }
     return SQLValue(value)
   }
 }
 
-public struct SQLValue {
-  private let value: Bindable?
-  init(_ value: Bindable?) {
-    self.value = value
-  }
-  public var string: String? { return get() }
-  public var int: Int? { return get() }
-  public var double: Double? { return get() }
-  public var data: Data? { return get() }
-  public var bool: Bool? { return get() }
-
-  public func get<T>() -> T? {
-    return value as? T
-  }
-}
 
 // MARK: General
 extension Row {
@@ -38,7 +48,7 @@ extension Row {
    All column names of the row.
    */
   public var allColumnNames:[String] {
-    return Array(self.valuesByColumnNames.keys)
+    return self.items.map { $0.columnName }
   }
 }
 
@@ -81,7 +91,7 @@ extension Row {
   }
   
   fileprivate func value<T>(forColumn columnName:String) -> T? {
-    return self.valuesByColumnNames[columnName] as? T
+    return _valuesByColumnNames[columnName] as? T
   }
 }
 
