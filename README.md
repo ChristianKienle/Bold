@@ -1,16 +1,9 @@
 ![Alt text](/GFX/logo.png?raw=true "Bold Logo")
 
-# Build Status
 | Branch        | Status           | 
 | ------------- |:-------------:|
 | Master      | [![Build Status](https://travis-ci.org/ChristianKienle/Bold.svg?branch=master)](https://travis-ci.org/ChristianKienle/Bold) |
 | Develop      | [![Build Status](https://travis-ci.org/ChristianKienle/Bold.svg?branch=develop)](https://travis-ci.org/ChristianKienle/Bold)      |
-
-A lightweight and extensible SQLite wrapper written in Swift by [@CocoaPimper](https://twitter.com/CocoaPimper). 
-
-# Why yet another SQLite wrapper?
-I wanted to dive into Swift and writing a SQLite wrapper seemed like a good thing to do. So **Bold** is basically a just for fun project. 
-
 
 # Simple Example
 The example below creates an in-memory database, opens it, creates a table, inserts a row and then queries the table. Please note that the result is closed automatically after a complete iteration by using `for-in`.
@@ -65,6 +58,9 @@ When you access the contents of a row you access the data by using methods like 
     }
     
 Now you can use `UUIDValue(columnName:)` when accessing the data of your rows.
+
+# Why yet another SQLite wrapper?
+I wanted to dive into Swift and writing a SQLite wrapper seemed like a good thing to do. So **Bold** is basically a just for fun project. 
 
 # Lightweight
 **Bold** is lightweight. This means that **Bold** does not try to be smart. For example it does not implement `SQLITE_BUSY`-handling like some other SQLite wrappers do. I believe that any implementation of `SQLITE_BUSY`-handling hides an underlying locking problem that you might have. Other wrappers simply wait for a couple of seconds until they time out. Please note that libsqlite3 already has ways to avoid `SQLITE_BUSY` related errors.
