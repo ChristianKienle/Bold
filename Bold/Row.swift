@@ -4,12 +4,24 @@ import Foundation
  Represents a row in a result set. You cann add support for custom types just by extending Row. For an example look at boolValue(columnName:) which is simply uses intValue(columnName:) internally.
  */
 public struct Row {
-  fileprivate var valuesByColumnNames = [String: Bindable?]()
-  init(valuesByColumnNames:[String: Bindable?]) {
-    self.valuesByColumnNames = valuesByColumnNames
+  struct Item {
+    let columnIndex: Int32
+    let columnName: String
+    let value: Bindable?
   }
+  fileprivate let items: [Item]
+  init(items: [Item]) {
+    self.items = items
+    var valuesByColumnNames = [String: Bindable?]()
+    self.items.forEach { (item) in
+      valuesByColumnNames[item.columnName] = item.value
+    }
+    _valuesByColumnNames = valuesByColumnNames
+  }
+  fileprivate let _valuesByColumnNames: [String: Bindable?]
+  
   public subscript(column: String) -> SQLValue {
-    guard let value = valuesByColumnNames[column] else {
+    guard let value = _valuesByColumnNames[column] else {
       return SQLValue(nil)
     }
     return SQLValue(value)
@@ -38,7 +50,7 @@ extension Row {
    All column names of the row.
    */
   public var allColumnNames:[String] {
-    return Array(self.valuesByColumnNames.keys)
+    return self.items.map { $0.columnName }
   }
 }
 
@@ -81,7 +93,7 @@ extension Row {
   }
   
   fileprivate func value<T>(forColumn columnName:String) -> T? {
-    return self.valuesByColumnNames[columnName] as? T
+    return _valuesByColumnNames[columnName] as? T
   }
 }
 

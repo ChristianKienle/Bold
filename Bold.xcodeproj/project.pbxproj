@@ -18,6 +18,7 @@
 		ABACBF391DC65A5D00C8CC03 /* Statement.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACDE2C1A50687300134C98 /* Statement.swift */; };
 		ABACBF3A1DC65A5D00C8CC03 /* PreparationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCFAA621A517E2B0042B445 /* PreparationResult.swift */; };
 		ABACBF3C1DC65A7E00C8CC03 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ABACBF3B1DC65A7E00C8CC03 /* libsqlite3.tbd */; };
+		ABACBF3F1DCCE2C000C8CC03 /* DatabaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACBF3E1DCCE2C000C8CC03 /* DatabaseTestCase.swift */; };
 		ABACDE0E1A50683900134C98 /* Bold-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = ABACDE0D1A50683900134C98 /* Bold-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		ABACDE141A50683900134C98 /* Bold.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABACDE081A50683900134C98 /* Bold.framework */; };
 		ABACDE1B1A50683900134C98 /* BoldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABACDE1A1A50683900134C98 /* BoldTests.swift */; };
@@ -50,6 +51,7 @@
 		ABACBF2D1DC65A2100C8CC03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABACBF3B1DC65A7E00C8CC03 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		ABACBF3D1DC65CA900C8CC03 /* Bold-iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bold-iOS-Bridging-Header.h"; sourceTree = "<group>"; };
+		ABACBF3E1DCCE2C000C8CC03 /* DatabaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseTestCase.swift; sourceTree = "<group>"; };
 		ABACDE081A50683900134C98 /* Bold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Bold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABACDE0C1A50683900134C98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABACDE0D1A50683900134C98 /* Bold-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bold-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 		ABACDE171A50683900134C98 /* BoldTests */ = {
 			isa = PBXGroup;
 			children = (
+				ABACBF3E1DCCE2C000C8CC03 /* DatabaseTestCase.swift */,
 				ABACDE1A1A50683900134C98 /* BoldTests.swift */,
 				ABCFAA641A517F480042B445 /* DatabaseTests.swift */,
 				ABACDE181A50683900134C98 /* Supporting Files */,
@@ -363,6 +366,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABCFAA651A517F480042B445 /* DatabaseTests.swift in Sources */,
+				ABACBF3F1DCCE2C000C8CC03 /* DatabaseTestCase.swift in Sources */,
 				ABACDE1B1A50683900134C98 /* BoldTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

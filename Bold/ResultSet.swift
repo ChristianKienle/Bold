@@ -48,7 +48,8 @@ public extension ResultSet {
     Gets the current row.
   */
   public var row: Row {
-    var valuesByColumnNames = [String:Bindable?]()
+    var items = Array<Row.Item>()
+    
     let columnIndexes = (0..<columnCount)
     columnIndexes.forEach { index in
       guard let rawColumnName = sqlite3_column_name(statement.statementHandle, index) else {
@@ -56,9 +57,9 @@ public extension ResultSet {
       }
       let columnName = String(cString: rawColumnName)
       let value = self.value(forColumn: index)
-      valuesByColumnNames[columnName] = value
+      items.append(Row.Item(columnIndex: index, columnName: columnName, value: value))
     }
-    return Row(valuesByColumnNames:valuesByColumnNames)
+    return Row(items: items)
   }
 }
 
