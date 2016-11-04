@@ -1,12 +1,9 @@
 ![Alt text](/GFX/logo.png?raw=true "Bold Logo")
 
-# Build Status
 | Branch        | Status           | 
 | ------------- |:-------------:|
 | Master      | [![Build Status](https://travis-ci.org/ChristianKienle/Bold.svg?branch=master)](https://travis-ci.org/ChristianKienle/Bold) |
 | Develop      | [![Build Status](https://travis-ci.org/ChristianKienle/Bold.svg?branch=develop)](https://travis-ci.org/ChristianKienle/Bold)      |
-
-A lightweight and extensible SQLite wrapper written in Swift by [@CocoaPimper](https://twitter.com/CocoaPimper). 
 
 # Why yet another SQLite wrapper?
 I wanted to dive into Swift and writing a SQLite wrapper seemed like a good thing to do. So **Bold** is basically a just for fun project. 
