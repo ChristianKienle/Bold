@@ -2,32 +2,16 @@ import Cocoa
 import XCTest
 import Bold
 
-struct Person {
-  let firstName:String
-  let lastName:String
-  let age:Int
-}
-
-class BoldTests: XCTestCase {
-  var database: Database!
-  override func setUp() {
-    super.setUp()
-    self.database = Database(URL: ":memory:")
-    let _ = self.database?.open()
-  }
-  
-  override func tearDown() {
-    super.tearDown()
-    let _ = self.database?.close()
-  }
+class BoldTests: DatabaseTestCase {
   
   func testNullValues() {
     createPersonTable()
     let result = database.update("INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil])
     XCTAssertTrue(result.isSuccess)
-    let queryResult = database.query("SELECT * FROM PERSON")
+    let queryResult = database.query("SELECT firstName, lastName, age FROM PERSON")
     XCTAssertTrue(queryResult.isSuccess)
     for row in queryResult {
+      XCTAssertEqual(row.allColumnNames, ["firstName", "lastName", "age"])
       let firstName = row.stringValue(forColumn: "firstName")
       let lastName = row.stringValue(forColumn: "lastName")
       let age = row.intValue(forColumn: "age")
@@ -37,8 +21,23 @@ class BoldTests: XCTestCase {
     }
   }
   
+  func testResultSetCanBeClosed() {
+    createPersonTable()
+    let result = database.update("INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil])
+    XCTAssertTrue(result.isSuccess)
+    let queryResult = database.query("SELECT * FROM PERSON")
+    XCTAssertTrue(queryResult.isSuccess)
+    XCTAssertTrue(queryResult.closeResultSet())
+  }
+  
   func testTransactions() {
     createPersonTable()
+    XCTAssertTrue(database.beginTransaction())
+    guard database.update("INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil]).isSuccess else {
+      XCTFail()
+      return
+    }
+    XCTAssertTrue(database.rollback())
     XCTAssertTrue(database.beginTransaction())
     guard database.update("INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil]).isSuccess else {
       XCTFail()
@@ -103,9 +102,7 @@ class BoldTests: XCTestCase {
     var count = 0
     for row in result {
       count += 1
-      let firstName = row.stringValue(forColumn: "firstName")
-      NSLog("fn: %@", firstName!)
-      return ()
+      XCTAssertNotNil(row.stringValue(forColumn: "firstName"))
     }
     XCTAssertTrue(count==3)
   }
@@ -168,7 +165,7 @@ class BoldTests: XCTestCase {
     XCTAssertTrue(queryResult.isSuccess)
     queryResult.consumeResultSet { resultSet in
       while resultSet.next() {
-        let name = resultSet.stringValue(forColumn: 0)
+        let name = resultSet.row[columnIndex: 0].string
         XCTAssertEqual("Christian", name)
       }
     }
@@ -176,24 +173,14 @@ class BoldTests: XCTestCase {
   }
   
   func testExecuteUpdate() {
-    let result = self.database.query("SELECT * FROM PENIS", arguments: Array<Bindable?>())
-    switch result {
-    case .success( _):
-      NSLog("success")
-    case .failure( _):
-      NSLog("error");
+    let result = self.database.query("SELECT * FROM DoesNotExist", arguments: Array<Bindable?>())
+    XCTAssertTrue(result.isFailure)
+    XCTAssertFalse(result.isSuccess)
+    guard let error = result.error else {
+      XCTFail("result set must have an error")
+      return
     }
+    XCTAssertEqual(error.code, Error.Code.prepareFailed)
   }
-  
-  // Helper
-  fileprivate func createPersonTable() {
-    let arguments:[Bindable?] = Array<Bindable?>()
-    let result = self.database.update("CREATE TABLE PERSON (firstName text, lastName text, age integer)", arguments:arguments )
-    XCTAssertTrue(result.isSuccess)
-  }
-  
-  fileprivate func insertPerson(_ person:Person) {
-    let result = self.database.update("INSERT INTO PERSON (firstName, lastName, age) VALUES (?, ?, ?)", arguments: [person.firstName, person.lastName, person.age])
-    XCTAssertTrue(result.isSuccess)
-  }
+
 }

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "ABACBF291DC65A2000C8CC03"
-               BuildableName = "Bold-iOS.framework"
+               BuildableName = "Bold.framework"
                BlueprintName = "Bold-iOS"
                ReferencedContainer = "container:Bold.xcodeproj">
             </BuildableReference>
@@ -26,7 +26,8 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES">
       <Testables>
       </Testables>
       <AdditionalOptions>
@@ -46,7 +47,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "ABACBF291DC65A2000C8CC03"
-            BuildableName = "Bold-iOS.framework"
+            BuildableName = "Bold.framework"
             BlueprintName = "Bold-iOS"
             ReferencedContainer = "container:Bold.xcodeproj">
          </BuildableReference>
@@ -64,7 +65,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "ABACBF291DC65A2000C8CC03"
-            BuildableName = "Bold-iOS.framework"
+            BuildableName = "Bold.framework"
             BlueprintName = "Bold-iOS"
             ReferencedContainer = "container:Bold.xcodeproj">
          </BuildableReference>

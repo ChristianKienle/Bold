@@ -85,7 +85,7 @@ class DatabaseTests : XCTestCase {
       XCTAssertNotNil(row.boolValue(forColumn: "isCool"))
       
       // Is it correct?
-      XCTAssertEqual(row.stringValue(forColumn: "id")!, "1")
+      XCTAssertEqual(row.stringValue(forColumn: "id"), "1")
       XCTAssertEqual(row.stringValue(forColumn: "name")!, "Christian")
       XCTAssertEqual(row.intValue(forColumn: "age")!, 20)
       if let gender = row.doubleValue(forColumn: "gender") {
