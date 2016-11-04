@@ -37,8 +37,23 @@ class BoldTests: XCTestCase {
     }
   }
   
+  func testResultSetCanBeClosed() {
+    createPersonTable()
+    let result = database.update("INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil])
+    XCTAssertTrue(result.isSuccess)
+    let queryResult = database.query("SELECT * FROM PERSON")
+    XCTAssertTrue(queryResult.isSuccess)
+    XCTAssertTrue(queryResult.closeResultSet())
+  }
+  
   func testTransactions() {
     createPersonTable()
+    XCTAssertTrue(database.beginTransaction())
+    guard database.update("INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil]).isSuccess else {
+      XCTFail()
+      return
+    }
+    XCTAssertTrue(database.rollback())
     XCTAssertTrue(database.beginTransaction())
     guard database.update("INSERT INTO PERSON (firstName, lastName, age) VALUES (:firstName, :lastName, :age)", arguments: ["firstName":"Christian", "lastName":nil, "age":nil]).isSuccess else {
       XCTFail()
@@ -176,13 +191,14 @@ class BoldTests: XCTestCase {
   }
   
   func testExecuteUpdate() {
-    let result = self.database.query("SELECT * FROM PENIS", arguments: Array<Bindable?>())
-    switch result {
-    case .success( _):
-      NSLog("success")
-    case .failure( _):
-      NSLog("error");
+    let result = self.database.query("SELECT * FROM DoesNotExist", arguments: Array<Bindable?>())
+    XCTAssertTrue(result.isFailure)
+    XCTAssertFalse(result.isSuccess)
+    guard let error = result.error else {
+      XCTFail("result set must have an error")
+      return
     }
+    XCTAssertEqual(error.code, Error.Code.prepareFailed)
   }
   
   // Helper
